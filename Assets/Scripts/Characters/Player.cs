@@ -102,59 +102,59 @@ public class Player : MonoBehaviour
         NodeData data;
         SetPlayerMovingDirection(newMovementInput);
 
-        if (reachedJunction)
-        {
-            // when the player reahes a junction it makes the new junction to current
-            var PreviousNode = CurrentNode;
-            CurrentNode = moveToNode;
+        // if (reachedJunction)
+        // {
+        //     // when the player reahes a junction it makes the new junction to current
+        //     var PreviousNode = CurrentNode;
+        //     CurrentNode = moveToNode;
 
 
-            // now it finds new target from the juntion
-            data = CurrentNode.junctionNeighborsData.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
+        //     // now it finds new target from the juntion
+        //     data = CurrentNode.junctionNeighborsData.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
 
-            // moves towards the new target
-            if (data != null)
-            {
-                movementInput = newMovementInput;
-                moveToNode = data.node;
-            }
-            else
-            {
-                //  if no next node was found, we fetch the initial direction back
-                SetPlayerMovingDirection(movementInput);
+        //     // moves towards the new target
+        //     if (data != null)
+        //     {
+        //         movementInput = newMovementInput;
+        //         moveToNode = data.node;
+        //     }
+        //     else
+        //     {
+        //         //  if no next node was found, we fetch the initial direction back
+        //         SetPlayerMovingDirection(movementInput);
 
-                //checks for the new junciton on the same direction it is facing
-                data = CurrentNode.junctionNeighborsData.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
+        //         //checks for the new junciton on the same direction it is facing
+        //         data = CurrentNode.junctionNeighborsData.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
 
-                // save the data, no need for new input, as it's the same
-                if (data != null)
-                {
-                    moveToNode = data.node;
-                }
-                else
-                {
-                    // there no data is found, then it's a dead end
-                    movementInput = Vector2.zero;
-                }
-            }
+        //         // save the data, no need for new input, as it's the same
+        //         if (data != null)
+        //         {
+        //             moveToNode = data.node;
+        //         }
+        //         else
+        //         {
+        //             // there no data is found, then it's a dead end
+        //             movementInput = Vector2.zero;
+        //         }
+        //     }
 
-        }
-        else
-        {
-            // tries to get the Current node direction from the newNode. 
-            //? Why we do this?
-            // To go back to the alternate way only
-            data = moveToNode.junctionNeighborsData.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
+        // }
+        // else
+        // {
+        //     // tries to get the Current node direction from the newNode. 
+        //     //? Why we do this?
+        //     // To go back to the alternate way only
+        //     data = moveToNode.junctionNeighborsData.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
 
-            //if the data is the current node, set data and move
-            if (data != null && data.node == CurrentNode)
-            {
-                // we swap the data
-                (moveToNode, CurrentNode) = (CurrentNode, moveToNode);
-                movementInput = newMovementInput;
-            }
+        //     //if the data is the current node, set data and move
+        //     if (data != null && data.node == CurrentNode)
+        //     {
+        //         // we swap the data
+        //         (moveToNode, CurrentNode) = (CurrentNode, moveToNode);
+        //         movementInput = newMovementInput;
+        //     }
 
-        }
+        // }
     }
 
 

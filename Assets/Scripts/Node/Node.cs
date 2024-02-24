@@ -7,8 +7,13 @@ public class Node : MonoBehaviour
 {
 
 
-    public List<NodeData> junctionNeighborsData;
     public List<NodeData> neighbours;
+
+
+    public SpriteRenderer OpenCell;
+    public SpriteRenderer ClosedCell;
+    public bool isClosedCell;
+
 
 
     #region Init Methods
@@ -17,13 +22,9 @@ public class Node : MonoBehaviour
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
-    void Start()
+    void GetNeigh()
     {
         GetNeighbours();
-        foreach (var item in junctionNeighborsData)
-        {
-            item.nodeDirection = GetDirectionToNeighbour(item.node.transform.position);
-        }
     }
 
     #endregion Init Methods
@@ -68,15 +69,7 @@ public class Node : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// get the neighbour nod2 on the same direction
-    /// </summary>
-    /// <param name="direction"></param>
-    public virtual void GetNeighbourToDirection(NodeDirectionEnum direction)
-    {
-        if (junctionNeighborsData.Count > 0)
-            junctionNeighborsData.FirstOrDefault((node) => node.nodeDirection == direction);
-    }
+
 
 
     public NodeDirectionEnum GetDirectionToNeighbour(Vector3 neighbourPosition)
