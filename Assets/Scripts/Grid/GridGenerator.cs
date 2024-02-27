@@ -9,6 +9,6 @@ public class GridGenerator : MonoBehaviour
     void Start()
     {
         // Grid grid = new(4, 2, 10);
-        GridGeneric<Node> grid = new(4, 2, 10);
+        GridGeneric<Node> grid = new(4, 2, 10, (x, y) => new Node(x, y));
     }
 }

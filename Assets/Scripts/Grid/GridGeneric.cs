@@ -8,7 +8,7 @@ public class GridGeneric<TGridObj>
     public int celLSize;
     public TGridObj[,] gridArray;
 
-    public GridGeneric(int width, int height, int celLSize)
+    public GridGeneric(int width, int height, int celLSize, Func<int, int, TGridObj> setGridObject)
     {
         this.width = width;
         this.height = height;
@@ -20,7 +20,7 @@ public class GridGeneric<TGridObj>
         {
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
-                DrawGridLines(GetWorldCellPosition(x, y));
+                gridArray[x, y] = setGridObject(x, y);
             }
         }
     }
@@ -126,22 +126,27 @@ public class GridGeneric<TGridObj>
     /// Draws the grid line and center diomond block
     /// </summary>
     /// <param name="vec"></param>
-    private void DrawGridLines(Vector3 vec)
+    public void DrawGridLines(Vector3 vec, float delay)
     {
-        float gapSize = celLSize / 10f;
+        float innerGapSize = celLSize / 10f;
+        float outerGapSize = celLSize / 2f;
 
         //Inner        
-        Debug.DrawLine(vec + new Vector3(0, gapSize), vec + new Vector3(-gapSize, 0), Color.green, 10);
-        Debug.DrawLine(vec + new Vector3(-gapSize, 0), vec + new Vector3(0, -gapSize), Color.green, 10);
-        Debug.DrawLine(vec + new Vector3(0, -gapSize), vec + new Vector3(gapSize, 0), Color.green, 10);
-        Debug.DrawLine(vec + new Vector3(gapSize, 0), vec + new Vector3(0, gapSize), Color.green, 10);
-
+        Debug.DrawLine(vec + new Vector3(0, innerGapSize), vec + new Vector3(-innerGapSize, 0), Color.yellow, delay);
+        Debug.DrawLine(vec + new Vector3(-innerGapSize, 0), vec + new Vector3(0, -innerGapSize), Color.yellow, delay);
+        Debug.DrawLine(vec + new Vector3(0, -innerGapSize), vec + new Vector3(innerGapSize, 0), Color.yellow, delay);
+        Debug.DrawLine(vec + new Vector3(innerGapSize, 0), vec + new Vector3(0, innerGapSize), Color.yellow, delay);
 
         // Outer
-        Debug.DrawLine(vec, new Vector3(vec.x, vec.y + celLSize), Color.white, 10);
-        Debug.DrawLine(vec, new Vector3(vec.x, vec.y - celLSize), Color.white, 10);
-        Debug.DrawLine(vec, new Vector3(vec.x + celLSize, vec.y), Color.white, 10);
-        Debug.DrawLine(vec, new Vector3(vec.x - celLSize, vec.y), Color.white, 10);
+        Debug.DrawLine(vec + new Vector3(-outerGapSize, outerGapSize), vec + new Vector3(outerGapSize, outerGapSize), Color.white, delay);
+        Debug.DrawLine(vec + new Vector3(outerGapSize, outerGapSize), vec + new Vector3(outerGapSize, -outerGapSize), Color.white, delay);
+        Debug.DrawLine(vec + new Vector3(outerGapSize, -outerGapSize), vec + new Vector3(-outerGapSize, -outerGapSize), Color.white, delay);
+        Debug.DrawLine(vec + new Vector3(-outerGapSize, -outerGapSize), vec + new Vector3(-outerGapSize, outerGapSize), Color.white, delay);
+    }
+
+    internal int GetWidth()
+    {
+        return width;
     }
     #endregion
 
