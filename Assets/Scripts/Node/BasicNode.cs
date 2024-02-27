@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class BasicNode : MonoBehaviour
 {
 
 
@@ -63,7 +63,7 @@ public class Node : MonoBehaviour
                 Debug.DrawRay(transform.position, dir * maxDistance, Color.green, 1);
                 neighbours.Add(new()
                 {
-                    node = hit.transform.GetComponent<Node>()
+                    node = hit.transform.GetComponent<BasicNode>()
                 });
             }
         }
@@ -114,6 +114,6 @@ public class Node : MonoBehaviour
 [Serializable]
 public class NodeData
 {
-    public Node node;
+    public BasicNode node;
     public NodeDirectionEnum nodeDirection;
 }

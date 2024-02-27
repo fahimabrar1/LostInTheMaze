@@ -24,13 +24,13 @@ public class Player : MonoBehaviour
     /// <summary>
     /// The Node currently plays is starting from
     /// </summary>
-    public Node CurrentNode;
+    public BasicNode CurrentNode;
 
 
     /// <summary>
     /// The Node currently plays is starting from
     /// </summary>
-    public Node moveToNode;
+    public BasicNode moveToNode;
 
     /// <summary>
     /// Stores the information when player is in the junction
