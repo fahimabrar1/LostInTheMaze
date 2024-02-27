@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GridGenerator : MonoBehaviour
+public class BasicGridGenerator : MonoBehaviour
 {
     [Header("Grid Configuration")]
     [Tooltip("The width of the grid")]
