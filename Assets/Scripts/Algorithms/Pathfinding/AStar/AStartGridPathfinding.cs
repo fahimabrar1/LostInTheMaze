@@ -79,12 +79,12 @@ public class AStartGridPathfinding
 
             openList.Remove(currentNode);
             closedList.Add(currentNode);
-
-            foreach (Node neighbour in Get8DirectionalNeighbours(currentNode))
+            List<Node> neighbours = Get8DirectionalNeighbours(currentNode);
+            foreach (Node neighbour in neighbours)
             {
                 // Ignore neighbour if in close list
-                if (closedList.Contains(neighbour)) continue;
-
+                if (closedList.Contains(neighbour) || neighbour == null) continue;
+                Debug.Log($"Neighbour {neighbour}");
                 int gCost = currentNode.GCost + CalculateEuclideanlDistanceHeuristicCost(currentNode, neighbour);
                 if (gCost < neighbour.GCost)
                 {
