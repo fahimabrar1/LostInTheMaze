@@ -79,7 +79,7 @@ public class AStartGridPathfinding
 
             openList.Remove(currentNode);
             closedList.Add(currentNode);
-            List<Node> neighbours = Get8DirectionalNeighbours(currentNode);
+            List<Node> neighbours = Get4DirectionalNeighbours(currentNode);
             foreach (Node neighbour in neighbours)
             {
                 // Ignore neighbour if in close list
@@ -90,7 +90,7 @@ public class AStartGridPathfinding
                 {
                     neighbour.previousNode = currentNode;
                     neighbour.GCost = gCost;
-                    neighbour.HCost = CalculateDiagonalDistanceHeuristicCost(currentNode, neighbour);
+                    neighbour.HCost = Calculate1ManhattanDistanceHeuristicCost(currentNode, neighbour);
                     neighbour.CalculateFCost();
 
                     if (!openList.Contains(neighbour))
@@ -147,6 +147,36 @@ public class AStartGridPathfinding
 
 
     /// <summary>
+    /// Gets the 8 direcitonal neighbour of a node in the grid
+    /// </summary>
+    /// <param name="currentNode">The inital from of thich the surrounding  nodes will be gotten</param>
+    /// <returns>The 8 neighbour or successor</returns>
+    private List<Node> Get4DirectionalNeighbours(Node currentNode)
+    {
+        List<Node> neighboursList = new();
+        // Left Node
+        if (currentNode.XPosition - 1 >= 0)
+            neighboursList.Add(GetNode(currentNode.XPosition - 1, currentNode.YPosition));
+
+
+        // Right Node
+        if (currentNode.XPosition + 1 < grid.GetWidth())
+            neighboursList.Add(GetNode(currentNode.XPosition + 1, currentNode.YPosition));
+
+        // Up Node
+        if (currentNode.YPosition + 1 < grid.Getheight()) neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition + 1));
+
+        // Down Node
+        if (currentNode.YPosition - 1 >= 0)
+            neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition - 1));
+
+
+        Debug.Log($"Found: {neighboursList.Count} Nodes");
+        return neighboursList;
+    }
+
+
+    /// <summary>
     /// Calculates the final path tracing back to starting node
     /// </summary>
     /// <param name="endNode">the final destination node</param>
@@ -186,6 +216,20 @@ public class AStartGridPathfinding
 
     /// <summary>
     /// This uses the formula:
+    /// h = abs (current_cell.x – goal.x) + abs (current_cell.y – goal.y)
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="goal"></param>
+    /// <returns></returns>
+    private int Calculate1ManhattanDistanceHeuristicCost(Node current, Node goal)
+    {
+        return Mathf.RoundToInt(Mathf.Abs(current.XPosition - goal.XPosition) + Mathf.Abs(current.YPosition - goal.YPosition));
+    }
+
+
+
+    /// <summary>
+    /// This uses the formula:
     /// h = D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
     /// where D is length of each node(usually = 1) and D2 is diagonal distance between each node (usually = sqrt(2) ). 
     /// </summary>
@@ -205,7 +249,6 @@ public class AStartGridPathfinding
     /// This uses the formula:
     /// h = sqrt ( (current_cell.x – goal.x)2 + 
     ///            (current_cell.y – goal.y)2 )
-    /// where D is length of each node(usually = 1) and D2 is diagonal distance between each node (usually = sqrt(2) ). 
     /// </summary>
     /// <param name="current"></param>
     /// <param name="goal"></param>
