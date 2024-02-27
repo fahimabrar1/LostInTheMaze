@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class AStartGridPathfinding
 {
+    /// <href ="https://www.geeksforgeeks.org/a-search-algorithm/">
     public const int MOVE_STRAIGHT_COST = 10;
 
     public const int MOVE_DIAGONAL_COST = 20;
@@ -35,6 +37,15 @@ public class AStartGridPathfinding
         // }
     }
 
+
+    /// <summary>
+    /// The Algorithm that finds the shortest path from start to end
+    /// </summary>
+    /// <param name="startX">The starting x point of the node</param>
+    /// <param name="startY">The starting y point of the node</param>
+    /// <param name="endX">The end x point of the node</param>
+    /// <param name="endY">The end y point of the node</param>
+    /// <returns></returns>
     public List<Node> FindPath(int startX, int startY, int endX, int endY)
     {
         closedList = new();
@@ -53,7 +64,7 @@ public class AStartGridPathfinding
         }
 
         startNode.GCost = 0;
-        startNode.HCost = CalculateHeuristicCost(startNode, endNode);
+        startNode.HCost = CalculateDiagonalDistanceHeuristicCost(startNode, endNode);
         startNode.CalculateFCost();
 
         while (openList.Count > 0)
@@ -74,12 +85,12 @@ public class AStartGridPathfinding
                 // Ignore neighbour if in close list
                 if (closedList.Contains(neighbour)) continue;
 
-                int gCost = currentNode.GCost + CalculateHeuristicCost(currentNode, neighbour);
+                int gCost = currentNode.GCost + CalculateEuclideanlDistanceHeuristicCost(currentNode, neighbour);
                 if (gCost < neighbour.GCost)
                 {
                     neighbour.previousNode = currentNode;
                     neighbour.GCost = gCost;
-                    neighbour.HCost = CalculateHeuristicCost(currentNode, neighbour);
+                    neighbour.HCost = CalculateDiagonalDistanceHeuristicCost(currentNode, neighbour);
                     neighbour.CalculateFCost();
 
                     if (!openList.Contains(neighbour))
@@ -95,7 +106,11 @@ public class AStartGridPathfinding
     }
 
 
-
+    /// <summary>
+    /// Gets the 8 direcitonal neighbour of a node in the grid
+    /// </summary>
+    /// <param name="currentNode">The inital from of thich the surrounding  nodes will be gotten</param>
+    /// <returns>The 8 neighbour or successor</returns>
     private List<Node> Get8DirectionalNeighbours(Node currentNode)
     {
         List<Node> neighboursList = new();
@@ -119,6 +134,14 @@ public class AStartGridPathfinding
             if (currentNode.YPosition + 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition + 1, currentNode.YPosition + 1));
         }
 
+        // Up
+        if (currentNode.YPosition + 1 < grid.Getheight()) neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition + 1));
+
+        // Down
+        if (currentNode.YPosition - 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition - 1));
+
+
+        Debug.Log($"Found: {neighboursList.Count} Nodes");
         return neighboursList;
     }
 
@@ -147,7 +170,12 @@ public class AStartGridPathfinding
     }
 
 
-
+    /// <summary>
+    /// Gets the node from the grid bvy value
+    /// </summary>
+    /// <param name="x">X-Value in the grid</param>
+    /// <param name="y">Y-Value in the grid</param>
+    /// <returns></returns>
     public Node GetNode(int x, int y)
     {
         return grid.GetValue(x, y);
@@ -155,28 +183,52 @@ public class AStartGridPathfinding
 
 
 
+
     /// <summary>
-    /// 
+    /// This uses the formula:
+    /// h = D * (dx + dy) + (D2 - 2 * D) * min(dx, dy)
+    /// where D is length of each node(usually = 1) and D2 is diagonal distance between each node (usually = sqrt(2) ). 
     /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
+    /// <param name="current"></param>
+    /// <param name="goal"></param>
     /// <returns></returns>
-    private int CalculateHeuristicCost(Node a, Node b)
+    private int CalculateEuclideanlDistanceHeuristicCost(Node current, Node goal)
     {
-        int xDistance = Mathf.Abs(a.XPosition - b.XPosition);
-        int yDistance = Mathf.Abs(a.YPosition - b.YPosition);
-        int remainingDistance = Mathf.Abs(xDistance - yDistance);
-        return MOVE_DIAGONAL_COST * Mathf.Min(xDistance, yDistance) + MOVE_STRAIGHT_COST * remainingDistance;
+        Debug.Log($"Node Current EDHC: {current}");
+        Debug.Log($"Node Goal EDHC: {goal}");
+        return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(current.XPosition - goal.XPosition, 2) + Mathf.Pow(current.YPosition - goal.YPosition, 2)));
     }
 
 
+
+    /// <summary>
+    /// This uses the formula:
+    /// h = sqrt ( (current_cell.x – goal.x)2 + 
+    ///            (current_cell.y – goal.y)2 )
+    /// where D is length of each node(usually = 1) and D2 is diagonal distance between each node (usually = sqrt(2) ). 
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="goal"></param>
+    /// <returns></returns>
+    private int CalculateDiagonalDistanceHeuristicCost(Node current, Node goal)
+    {
+        int xDistance = Mathf.Abs(current.XPosition - goal.XPosition);
+        int yDistance = Mathf.Abs(current.YPosition - goal.YPosition);
+
+        return MOVE_STRAIGHT_COST * (xDistance + yDistance) + (MOVE_DIAGONAL_COST - 2 * MOVE_STRAIGHT_COST) * Mathf.Min(xDistance, yDistance);
+    }
+
+
+
+    /// <summary>
+    /// Gets the node with the Lowest Fcose 
+    /// </summary>
+    /// <param name="pathNodes">list of nodes in the open list</param>
+    /// <returns></returns>
     private Node GetLowestFCostNode(List<Node> pathNodes)
     {
-        Node node = pathNodes[0];
-
-        Node n = pathNodes.OrderBy(n => n.FCost).FirstOrDefault();
-        Debug.Log($"Node For Lowest FC: {n}");
-        return n;
+        Node node = pathNodes.OrderBy(n => n.FCost).FirstOrDefault();
+        return node;
     }
 
 }

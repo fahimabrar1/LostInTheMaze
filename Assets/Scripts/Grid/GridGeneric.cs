@@ -148,6 +148,11 @@ public class GridGeneric<TGridObj>
     {
         return width;
     }
+
+    internal int Getheight()
+    {
+        return height;
+    }
     #endregion
 
 }
