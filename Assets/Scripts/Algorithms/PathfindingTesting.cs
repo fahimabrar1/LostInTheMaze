@@ -21,7 +21,12 @@ public class PathfindingTesting : MonoBehaviour
 
 
     [Header("Node Prefab")]
+
     public GameObject nodePrefab;
+
+    [Header("Node List")]
+    public List<Node> nodes;
+
 
 
     /// <summary>
@@ -37,6 +42,7 @@ public class PathfindingTesting : MonoBehaviour
     /// </summary>
     void Start()
     {
+        nodes = new();
         gridPathfinding = new(rows, columns, cellSize);
         GenerateGrid();
         InvokeRepeating("DrawGridGizmos", 0.0f, 0.1f);
@@ -51,13 +57,18 @@ public class PathfindingTesting : MonoBehaviour
             for (int y = 0; y < columns; y++)
             {
                 var obj = Instantiate(nodePrefab, cellSize * new Vector2(x, y), Quaternion.identity, transform);
-
+                obj.name = $"Node {x} {y}";
                 // Setting the Node data
                 Node node = obj.GetComponent<Node>();
-
+                nodes.Add(node);
                 node.model = gridPathfinding.grid.gridArray[x, y];
                 node.Initialize();
             }
+        }
+
+        foreach (var node in nodes)
+        {
+            node.Get4Neighbours();
         }
     }
 
@@ -76,7 +87,7 @@ public class PathfindingTesting : MonoBehaviour
 
             gridPathfinding.grid.GetXY(location, out x, out y);
             List<NodeDataModel> path = gridPathfinding.FindPath(0, 0, x, y);
-            if (path.Count > 0)
+            if (path != null && path.Count > 0)
             {
                 Debug.Log($"Path Len: {path.Count}");
                 for (int i = path.Count - 1; i > 0; i--)
@@ -87,7 +98,7 @@ public class PathfindingTesting : MonoBehaviour
                         Debug.Log($"Path Prev X: {path[i].previousNode.XPosition}, Path Prev  Y: {path[i].previousNode.YPosition}");
                         Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].XPosition, path[i].YPosition), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.XPosition, path[i].previousNode.YPosition), Color.green, 1);
                     }
-                    catch (System.Exception)
+                    catch (Exception)
                     {
                     }
 

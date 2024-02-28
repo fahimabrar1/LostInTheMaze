@@ -30,13 +30,6 @@ public class AStartGridPathfinding
 
 
 
-    public AStartGridPathfinding(int width, int height)
-    {
-        grid = new(width, height, 10, (x, y) => new NodeDataModel(x, y));
-
-    }
-
-
     /// <summary>
     /// Initialzies the row/col number with the walkable balue
     /// </summary>
@@ -45,7 +38,7 @@ public class AStartGridPathfinding
     /// <returns>The node Data</returns>
     private NodeDataModel InitializeNodeData(int x, int y, int cellSize)
     {
-        return new NodeDataModel(x, y, cellSize, RandomWalkProbability());
+        return new NodeDataModel(x, y, cellSize, (x == 0 && y == 0) || RandomWalkProbability());
     }
 
 
@@ -55,6 +48,7 @@ public class AStartGridPathfinding
     /// <returns>isWalkable or not</returns>
     private bool RandomWalkProbability()
     {
+
         // Adjust the probability as needed
         const double probabilityOfWalking = 0.7; // 70% probability of walking (true)
 
@@ -76,10 +70,17 @@ public class AStartGridPathfinding
     /// <returns></returns>
     public List<NodeDataModel> FindPath(int startX, int startY, int endX, int endY)
     {
+        // Initialize closed list
         closedList = new();
+
+        // Get start and end nodes
         NodeDataModel startNode = grid.GetValue(startX, startY);
         NodeDataModel endNode = grid.GetValue(endX, endY);
+
+        // Initialize open list with start node
         openList = new() { startNode };
+
+        // Set default GCost, HCost, and previousNode for all nodes
         for (int x = 0; x < grid.gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < grid.gridArray.GetLength(1); y++)
@@ -91,12 +92,14 @@ public class AStartGridPathfinding
             }
         }
 
+        // Initialize start node's GCost and HCost
         startNode.GCost = 0;
         startNode.HCost = CalculateDiagonalDistanceHeuristicCost(startNode, endNode);
         startNode.CalculateFCost();
 
         while (openList.Count > 0)
         {
+            // Get the node with the lowest FCost
             NodeDataModel currentNode = GetLowestFCostNode(openList);
 
             if (currentNode == endNode)
@@ -105,16 +108,20 @@ public class AStartGridPathfinding
                 return CalculatePath(endNode);
             }
 
+            // Remove the current node from the open list and add it to the closed list
             openList.Remove(currentNode);
             closedList.Add(currentNode);
+
+            // Get the neighbors of the current node
             List<NodeDataModel> neighbours = Get4DirectionalNeighbours(currentNode);
+
             foreach (NodeDataModel neighbour in neighbours)
             {
                 if (neighbour == null) continue;
 
                 if (!neighbour.isWalkable)
                 {
-                    // Ignore neighbour if in close list
+                    // Ignore neighbor if it's in the closed list
                     if (!closedList.Contains(neighbour))
                     {
                         closedList.Add(neighbour);
@@ -126,12 +133,12 @@ public class AStartGridPathfinding
                     continue;
                 }
 
-
-
-                Debug.Log($"Neighbour {neighbour}");
+                // Calculate new GCost for the neighbor
                 int gCost = currentNode.GCost + CalculateEuclideanlDistanceHeuristicCost(currentNode, neighbour);
+
                 if (gCost < neighbour.GCost)
                 {
+                    // Update neighbor's previous node, GCost, HCost, and FCost
                     neighbour.previousNode = currentNode;
                     neighbour.GCost = gCost;
                     neighbour.HCost = Calculate1ManhattanDistanceHeuristicCost(currentNode, neighbour);
@@ -139,9 +146,9 @@ public class AStartGridPathfinding
 
                     if (!openList.Contains(neighbour))
                     {
+                        // Add the neighbor to the open list
                         openList.Add(neighbour);
                     }
-
                 }
             }
         }
@@ -227,19 +234,29 @@ public class AStartGridPathfinding
     /// <returns>the path node list</returns>
     private List<NodeDataModel> CalculatePath(NodeDataModel endNode)
     {
+        // Initialize a new list of NodeDataModel objects to store the path
         List<NodeDataModel> path = new()
-        {
-            endNode
-        };
+    {
+        endNode
+    };
 
+        // Initialize a variable to store the current node
         NodeDataModel currentNode = endNode;
 
+        // Iterate through the nodes until the starting node is reached
         while (currentNode != null)
         {
+            // Add the previous node to the path list
             path.Add(currentNode.previousNode);
+
+            // Update the current node to the previous node
             currentNode = currentNode.previousNode;
         }
+
+        // Reverse the path list to get the path from starting node to end node
         path.Reverse();
+
+        // Return the calculated path
         return path;
     }
 
