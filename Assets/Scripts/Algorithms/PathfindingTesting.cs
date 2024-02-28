@@ -2,12 +2,13 @@ using UnityEngine;
 using FahimsUtils;
 using System.Collections.Generic;
 using System;
-using System.Threading.Tasks;
+
+
 public class PathfindingTesting : MonoBehaviour
 {
 
     [Tooltip("The pathfinding grid system")]
-    private AStartGridPathfinding gridPathfinding;
+    public AStartGridPathfinding gridPathfinding;
 
 
     [Tooltip("The size of the grid cell")]

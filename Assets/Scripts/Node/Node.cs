@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Node : MonoBehaviour
 {
 
 
-    [Tooltip("A list of neighboring nodes to this node.")]
-    public List<Node> neighbours = new();
+    [Tooltip("A list of neighboring nodes container, containing both node and it's direction from this node.")]
+    public List<NodeContainer> neighbours = new();
 
     [Tooltip("The open cell game object used to represent a walkable node.")]
     public GameObject OpenCell;
@@ -41,6 +40,11 @@ public class Node : MonoBehaviour
         AddNeighbour(Vector2.right);
     }
 
+    private void JunctionCheck()
+    {
+        throw new NotImplementedException();
+    }
+
 
 
     /// <summary>
@@ -71,13 +75,21 @@ public class Node : MonoBehaviour
                     Debug.DrawRay(transform.position, dir * maxDistance, Color.blue, 1);
 
                     // If the neighbouring node is not already in the current node's list of neighbours...
-                    if (!neighbours.Contains(node))
+
+                    var value = neighbours.Find((n) => n.node == node);
+                    if (value == null)
                     {
                         // Add the neighbouring node to the list of neighbours.
-                        neighbours.Add(node);
+                        neighbours.Add(new(
+                        node,
+                        GetDirectionToNeighbour(node.transform.position)
+                    ));
                     }
+
+
                 }
             }
+
         }
     }
 

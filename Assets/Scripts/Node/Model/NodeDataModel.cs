@@ -5,6 +5,8 @@ using UnityEngine;
 [Serializable]
 public class NodeDataModel
 {
+    [Header("A* data")]
+
     [Tooltip("X-coordinate of the node.")]
     public int XPosition;
 
@@ -29,6 +31,7 @@ public class NodeDataModel
 
     [Header("Game Varaibles")]
     public bool isWalkable;
+    public bool isJunction;
 
 
     public NodeDataModel() { }
