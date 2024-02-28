@@ -94,43 +94,50 @@ public class Player_V2 : MonoBehaviour
     #region Methods
 
 
+
     /// <summary>
-    /// Checks if there is a node in player travelling direction
+    /// Checks for the next node in the path based on the player's movement input.
     /// </summary>
+    /// <param name="reachedJunction">Optional parameter indicating if the player has reached a junction.</param>
     private void CheckForNextNode(bool reachedJunction = false)
     {
+        // Create a new NodeContainer object to store the data of the current and next nodes.
         NodeContainer data;
+
+        // Update the player's moving direction based on the new movement input.
         SetPlayerMovingDirection(newMovementInput);
 
-        // when the player reahes a junction it makes the new junction to current
+        // Store the previous node in a variable.
         var PreviousNode = CurrentNode;
+
+        // Update the current node to the next node in the path.
         CurrentNode = moveToNode;
 
-        // now it finds new target from the juntion
+        // Find the next node in the path based on the player's moving direction.
         data = CurrentNode.neighbours.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
 
-        // moves towards the new target
+        // If a next node is found, update the movement input and move to the next node.
         if (data != null)
         {
             movementInput = newMovementInput;
             moveToNode = data.node;
         }
+        // If no next node is found, reset the movement input to zero.
         else
         {
-
             SetPlayerMovingDirection(movementInput);
 
-            //checks for the new junciton on the same direction it is facing
+            // Try to find a next node again by checking the neighbours of the current node.
             data = CurrentNode.neighbours.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
 
-            // save the data, no need for new input, as it's the same
+            // If a next node is still found, update the moveToNode variable.
             if (data != null)
             {
                 moveToNode = data.node;
             }
+            // If no next node is found, keep the movement input as zero.
             else
             {
-                // there no data is found, then it's a dead end
                 movementInput = Vector2.zero;
             }
         }
@@ -170,34 +177,33 @@ public class Player_V2 : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// Sets the player's moving direction based on the provided vector2.
+    /// </summary>
+    /// <param name="vector2">The vector2 representing the player's moving direction.</param>
     protected void SetPlayerMovingDirection(Vector2 vector2)
     {
+        // If the vector2 represents up movement, set the player's moving direction to up.
         if (vector2 == Vector2.up)
         {
             playerMovingDirection = NodeDirectionEnum.up;
         }
+        // If the vector2 represents down movement, set the player's moving direction to down.
         else if (vector2 == Vector2.down)
         {
             playerMovingDirection = NodeDirectionEnum.down;
         }
+        // If the vector2 represents left movement, set the player's moving direction to left.
         else if (vector2 == Vector2.left)
         {
             playerMovingDirection = NodeDirectionEnum.left;
         }
+        // If the vector2 represents right movement, set the player's moving direction to right.
         else if (vector2 == Vector2.right)
         {
             playerMovingDirection = NodeDirectionEnum.right;
         }
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    private void OnStartMove()
-    {
-
-    }
-
     #endregion  Methods
 
 
@@ -208,14 +214,16 @@ public class Player_V2 : MonoBehaviour
     /// <param name="context"></param>
     private void OnPressInputStarted(InputAction.CallbackContext context)
     {
+        // Read the input value as a Vector2
         newMovementInput = context.ReadValue<Vector2>();
         Debug.Log($"Input: {newMovementInput}");
 
+        // Check if the game has started or if the new input direction is opposite to the current input direction
         if (!gameStart || IsOppositeDirection(newMovementInput, movementInput))
             CheckForNextNode(true);
 
+        // If the game hasn't started yet, set the gameStart flag to true
         if (!gameStart) gameStart = true;
-
     }
 
 
