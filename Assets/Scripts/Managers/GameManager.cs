@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    // Singleton instance
+    public static GameManager instance { get; private set; }
+
     public GameObject Player;
     public PathfindingTesting pathfindingTesting;
 
@@ -15,6 +18,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(this);
+
+        Application.targetFrameRate = 60;
         pathfindingTesting = FindAnyObjectByType<PathfindingTesting>();
     }
 
@@ -54,4 +66,9 @@ public class GameManager : MonoBehaviour
         // Set the player's target node to the starting node.
         Obj.moveToNode = a;
     }
+
+
+
+
+
 }

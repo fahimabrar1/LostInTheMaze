@@ -98,82 +98,32 @@ public class PathfindingTesting : MonoBehaviour
     // /// </summary>
     // void Update()
     // {
+    //     // Check if the left mouse button is clicked
     //     if (Input.GetMouseButtonDown(0))
     //     {
+    //         // Get the x and y coordinates of the clicked cell
     //         int x, y;
     //         Vector3 location = UtilsClass.GetMouseWorldPosition();
     //         Debug.Log($"Location: {location}");
 
+    //         // Get the x and y coordinates of the clicked cell in the grid
     //         gridPathfinding.grid.GetXY(location, out x, out y);
+
+    //         // Find the path from the starting cell (0, 0) to the clicked cell (x, y)
     //         List<NodeDataModel> path = gridPathfinding.FindPath(0, 0, x, y);
+
+    //         // If a valid path is found and its length is greater than 0
     //         if (path != null && path.Count > 0)
     //         {
+    //             // Log the length of the path
     //             Debug.Log($"Path Len: {path.Count}");
-    //             for (int i = path.Count - 1; i > 0; i--)
-    //             {
-    //                 try
-    //                 {
-    //                     Debug.Log($"Path X: {path[i].XPosition}, Path Y: {path[i].YPosition}");
-    //                     Debug.Log($"Path Prev X: {path[i].previousNode.XPosition}, Path Prev  Y: {path[i].previousNode.YPosition}");
-    //                     Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].XPosition, path[i].YPosition), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.XPosition, path[i].previousNode.YPosition), Color.green, 1);
-    //                 }
-    //                 catch (Exception)
-    //                 {
-    //                 }
 
-    //             }
+    //             // Iterate through the path in reverse order
+    //                     DrawPathLines(path);
+
     //         }
     //     }
     // }
-
-
-    /// <summary>
-    /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// </summary>
-    void Update()
-    {
-        // Check if the left mouse button is clicked
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Get the x and y coordinates of the clicked cell
-            int x, y;
-            Vector3 location = UtilsClass.GetMouseWorldPosition();
-            Debug.Log($"Location: {location}");
-
-            // Get the x and y coordinates of the clicked cell in the grid
-            gridPathfinding.grid.GetXY(location, out x, out y);
-
-            // Find the path from the starting cell (0, 0) to the clicked cell (x, y)
-            List<NodeDataModel> path = gridPathfinding.FindPath(0, 0, x, y);
-
-            // If a valid path is found and its length is greater than 0
-            if (path != null && path.Count > 0)
-            {
-                // Log the length of the path
-                Debug.Log($"Path Len: {path.Count}");
-
-                // Iterate through the path in reverse order
-                for (int i = path.Count - 1; i > 0; i--)
-                {
-                    try
-                    {
-                        // Log the x and y coordinates of the current cell
-                        Debug.Log($"Path X: {path[i].XPosition}, Path Y: {path[i].YPosition}");
-
-                        // Log the x and y coordinates of the previous cell
-                        Debug.Log($"Path Prev X: {path[i].previousNode.XPosition}, Path Prev  Y: {path[i].previousNode.YPosition}");
-
-                        // Draw a line between the current cell and the previous cell
-                        Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].XPosition, path[i].YPosition), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.XPosition, path[i].previousNode.YPosition), Color.green, 1);
-                    }
-                    catch (Exception)
-                    {
-                        // If an exception occurs, ignore it
-                    }
-                }
-            }
-        }
-    }
 
 
     /// <summary>
@@ -190,4 +140,53 @@ public class PathfindingTesting : MonoBehaviour
         }
     }
 
+
+    public List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
+    {
+        var pathList = gridPathfinding.FindPath(start, target);
+
+        List<NodeContainer> nodeQueue = new();
+        foreach (var nodeModel in pathList)
+        {
+            var node = nodes.Find((n) => n.model == nodeModel);
+            if (node == null) continue;
+            try
+            {
+                int index = pathList.IndexOf(nodeModel);
+                var nextNode = nodes.Find((n) => n.model == pathList[index + 1]);
+                NodeContainer container = new(node, node.GetDirectionToNeighbour(nextNode.transform.position));
+                nodeQueue.Add(container);
+            }
+            catch (Exception)
+            {
+                NodeContainer container = new(node, NodeDirectionEnum.up);
+                nodeQueue.Add(container);
+            }
+        }
+        DrawPathLines(pathList);
+        return nodeQueue;
+    }
+
+
+    public void DrawPathLines(List<NodeDataModel> path)
+    {
+        for (int i = path.Count - 1; i > 0; i--)
+        {
+            try
+            {
+                // Log the x and y coordinates of the current cell
+                Debug.Log($"Path X: {path[i].XPosition}, Path Y: {path[i].YPosition}");
+
+                // Log the x and y coordinates of the previous cell
+                Debug.Log($"Path Prev X: {path[i].previousNode.XPosition}, Path Prev  Y: {path[i].previousNode.YPosition}");
+
+                // Draw a line between the current cell and the previous cell
+                Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].XPosition, path[i].YPosition), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.XPosition, path[i].previousNode.YPosition), Color.green, 1);
+            }
+            catch (Exception)
+            {
+                // If an exception occurs, ignore it
+            }
+        }
+    }
 }

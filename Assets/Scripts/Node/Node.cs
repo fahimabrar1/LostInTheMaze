@@ -95,7 +95,7 @@ public class Node : MonoBehaviour
 
 
     /// <summary>
-    /// Determines the direction to the neighbouring node based on the position of the neighbour.
+    /// Determines the direction to the neighbouring node based on the position of this node.
     /// </summary>
     /// <param name="neighbourPosition">The position of the neighbouring node.</param>
     /// <returns>The direction to the neighbouring node.</returns>
@@ -176,6 +176,23 @@ public class Node : MonoBehaviour
         scaleY = model.CellSize / nodeSpriteRenderer2.bounds.size.y;
         transform.GetChild(1).localScale = new Vector3(scaleX, scaleY, 0);
 
+    }
+
+    public Vector2 GetDirectionVectorOfNodeDirection(NodeDirectionEnum nodeDirection)
+    {
+        switch (nodeDirection)
+        {
+            case NodeDirectionEnum.up:
+                return Vector2.up;
+            case NodeDirectionEnum.down:
+                return Vector2.down;
+            case NodeDirectionEnum.left:
+                return Vector2.left;
+            case NodeDirectionEnum.right:
+                return Vector2.right;
+            default:
+                return Vector2.up;
+        }
     }
     #endregion Basic Methods
 }

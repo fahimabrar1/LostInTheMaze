@@ -2,7 +2,9 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
-using Unity.VisualScripting;
+
+using FahimsUtils;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(PlayerInputControl))]
 public class Player_V2 : MonoBehaviour
@@ -22,13 +24,19 @@ public class Player_V2 : MonoBehaviour
 
 
     /// <summary>
+    /// The Node player has already visited
+    /// </summary>
+    public Node PreviousNode;
+
+
+    /// <summary>
     /// The Node currently plays is starting from
     /// </summary>
     public Node CurrentNode;
 
 
     /// <summary>
-    /// The Node currently plays is starting from
+    /// The Node players wanted to visit
     /// </summary>
     public Node moveToNode;
 
@@ -43,6 +51,11 @@ public class Player_V2 : MonoBehaviour
     /// </summary>
     private Vector2 newMovementInput;
 
+    /// <summary>
+    /// Stores the input user pressed before reaching junction
+    /// </summary>
+    public List<NodeContainer> pathQueue;
+
 
     /// <summary>
     /// Player moving direction
@@ -56,9 +69,18 @@ public class Player_V2 : MonoBehaviour
     /// </summary>
     void Start()
     {
-        PlayerInput.InputActions.Player.Movement.started += OnPressInputStarted;
+        pathQueue = new();
+
     }
 
+    /// <summary>
+    /// This function is called when the object becomes enabled and active.
+    /// </summary>
+    void OnEnable()
+    {
+        PlayerInput.InputActions.Player.Movement.started += OnPressInputStarted;
+        PlayerInput.InputActions.Player.MouseMovement.started += OnLeftClickInputStarted;
+    }
 
     /// <summary>
     /// This function is called when the behaviour becomes disabled or inactive.
@@ -66,7 +88,10 @@ public class Player_V2 : MonoBehaviour
     void OnDisable()
     {
         PlayerInput.InputActions.Player.Movement.started -= OnPressInputStarted;
+        PlayerInput.InputActions.Player.MouseMovement.started -= OnLeftClickInputStarted;
     }
+
+
 
 
     /// <summary>
@@ -76,7 +101,8 @@ public class Player_V2 : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, moveToNode.transform.position) < 0.01f && gameStart)
         {
-            CheckForNextNode(reachedJunction: true);
+            Debug.Log($"Found Node Calling");
+            CheckForNextNode();
         }
     }
 
@@ -99,7 +125,7 @@ public class Player_V2 : MonoBehaviour
     /// Checks for the next node in the path based on the player's movement input.
     /// </summary>
     /// <param name="reachedJunction">Optional parameter indicating if the player has reached a junction.</param>
-    private void CheckForNextNode(bool reachedJunction = false)
+    private void CheckForNextNode()
     {
         // Create a new NodeContainer object to store the data of the current and next nodes.
         NodeContainer data;
@@ -108,10 +134,28 @@ public class Player_V2 : MonoBehaviour
         SetPlayerMovingDirection(newMovementInput);
 
         // Store the previous node in a variable.
-        var PreviousNode = CurrentNode;
+        PreviousNode = CurrentNode;
 
         // Update the current node to the next node in the path.
         CurrentNode = moveToNode;
+
+        if (pathQueue.Count != 0)
+        {
+            NodeContainer container = pathQueue[0];
+            pathQueue.RemoveAt(0);
+            // if (container.node == moveToNode)
+            // {
+            //     CheckForNextNode();
+            //     return;
+            // }
+            Debug.Log($"Found Node Current: {CurrentNode}");
+            Debug.Log($"Found Node Current: {container.node} {CurrentNode.GetDirectionVectorOfNodeDirection(CurrentNode.GetDirectionToNeighbour(container.node.transform.position))}");
+            Debug.Log($"Found Node Current: {container.node} {container.nodeDirection}");
+
+            movementInput = CurrentNode.GetDirectionVectorOfNodeDirection(CurrentNode.GetDirectionToNeighbour(container.node.transform.position));
+            moveToNode = container.node;
+            return;
+        }
 
         // Find the next node in the path based on the player's moving direction.
         data = CurrentNode.neighbours.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
@@ -235,13 +279,25 @@ public class Player_V2 : MonoBehaviour
         // Read the input value as a Vector2
         newMovementInput = context.ReadValue<Vector2>();
         Debug.Log($"Input: {newMovementInput}");
+        // pathQueue.Clear();
 
         // Check if the game has started or if the new input direction is opposite to the current input direction
         if (!gameStart || IsOppositeDirection(newMovementInput, movementInput))
-            CheckForNextNode(true);
+            CheckForNextNode();
 
         // If the game hasn't started yet, set the gameStart flag to true
         if (!gameStart) gameStart = true;
+    }
+
+    private void OnLeftClickInputStarted(InputAction.CallbackContext context)
+    {
+        var input = context.ReadValue<Vector2>();
+        pathQueue = new();
+        pathQueue = GameManager.instance.pathfindingTesting.GetDestinationNodes(transform.position, UtilsClass.GetMouseWorldPositionWithZ(input));
+        // If the game hasn't started yet, set the gameStart flag to true
+        if (!gameStart) gameStart = true;
+
+        CheckForNextNode();
     }
 
 

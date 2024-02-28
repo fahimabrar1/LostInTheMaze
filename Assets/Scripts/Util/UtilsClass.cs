@@ -15,6 +15,11 @@ namespace FahimsUtils
             return vec;
         }
 
+        public static Vector3 GetMouseWorldPositionWithZ(Vector3 screenPositon)
+        {
+            return GetMouseWorldPositionWithZ(screenPositon, Camera.main);
+        }
+
         public static Vector3 GetMouseWorldPositionWithZ()
         {
             return GetMouseWorldPositionWithZ(Input.mousePosition, Camera.main);

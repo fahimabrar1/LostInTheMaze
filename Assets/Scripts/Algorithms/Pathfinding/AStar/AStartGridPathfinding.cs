@@ -59,6 +59,25 @@ public class AStartGridPathfinding
         return randomNumber < probabilityOfWalking;
     }
 
+    /// <summary>
+    /// Finds the path between two points in a grid-based environment.
+    /// </summary>
+    /// <param name="start">The starting point for the path.</param>
+    /// <param name="end">The destination point for the path.</param>
+    /// <returns>A list of NodeDataModel containing the path between start and end.</returns>
+    public List<NodeDataModel> FindPath(Vector3 start, Vector3 end)
+    {
+        int x, x1, y, y1; // Variables to store the grid coordinates
+
+        // Get the grid coordinates for the start and end points
+        grid.GetXY(start, out x, out y);
+        grid.GetXY(end, out x1, out y1);
+
+        // Call the overload that directly uses the grid coordinates
+        return FindPath(x, y, x1, y1);
+    }
+
+
 
     /// <summary>
     /// The Algorithm that finds the shortest path from start to end
