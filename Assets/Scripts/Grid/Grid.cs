@@ -3,23 +3,42 @@ using UnityEngine;
 
 public class Grid
 {
+    // The width of the grid in cells.
     public int width;
+
+    // The height of the grid in cells.
     public int height;
-    public int celLSize;
+
+    // The size of each cell in the grid.
+    public int cellSize;
+
+    // The 2D array representing the grid of cells.
     public int[,] gridArray;
 
-    public Grid(int width, int height, int celLSize)
+
+
+    /// <summary>
+    /// Constructor for the Grid class.
+    /// </summary>
+    /// <param name="width">The width of the grid in cells.</param>
+    /// <param name="height">The height of the grid in cells.</param>
+    /// <param name="cellSize">The size of each cell in the grid.</param>
+    public Grid(int width, int height, int cellSize)
     {
+        // Store the width, height, and cell size of the grid.
         this.width = width;
         this.height = height;
-        this.celLSize = celLSize;
+        this.cellSize = cellSize;
 
+        // Create a 2D array to represent the grid of cells.
         gridArray = new int[width, height];
 
+        // Iterate through each cell in the grid.
         for (int x = 0; x < gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
+                // Draw the grid lines for the current cell.
                 DrawGridLines(GetWorldCellPosition(x, y));
             }
         }
@@ -35,7 +54,7 @@ public class Grid
     /// <returns>The Cell coordinate according to the cell size in world space</returns>
     public Vector3 GetWorldCellPosition(int x, int y)
     {
-        return new Vector2(x, y) * celLSize;
+        return new Vector2(x, y) * cellSize;
     }
 
 
@@ -60,8 +79,8 @@ public class Grid
     /// <param name="y">Y-Value in the grid</param>
     public void GetXY(Vector3 worldPos, out int x, out int y)
     {
-        x = Mathf.FloorToInt(worldPos.x / celLSize);
-        y = Mathf.FloorToInt(worldPos.y / celLSize);
+        x = Mathf.FloorToInt(worldPos.x / cellSize);
+        y = Mathf.FloorToInt(worldPos.y / cellSize);
     }
 
 
@@ -110,8 +129,8 @@ public class Grid
     /// <param name="vec"></param>
     private void DrawGridLines(Vector3 vec)
     {
-        float innerGapSize = celLSize / 10f;
-        float outerGapSize = celLSize / 2f;
+        float innerGapSize = cellSize / 10f;
+        float outerGapSize = cellSize / 2f;
 
         //Inner        
         Debug.DrawLine(vec + new Vector3(0, innerGapSize), vec + new Vector3(-innerGapSize, 0), Color.green, 10);

@@ -16,13 +16,17 @@ public class GridGenerator : MonoBehaviour
 
     [Header("Node Prefab")]
     public GameObject nodePrefab;
+
+
+
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
     /// </summary>
     void Start()
     {
-        // Grid grid = new(4, 2, 10);
+        // Create a new grid with the specified number of rows, columns, and cell size
+        // The third parameter is a function that takes the x and y coordinates of a cell and returns a new NodeDataModel object
         GridGeneric<NodeDataModel> grid = new(rows, columns, cellSize, (x, y) => new NodeDataModel(x, y));
     }
 }

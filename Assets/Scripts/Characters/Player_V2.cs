@@ -149,29 +149,47 @@ public class Player_V2 : MonoBehaviour
     /// </summary>
     private void MovementAndRotation()
     {
+        // Check if there is any movement input
         if (movementInput != null)
+        {
+            // Move the player in the direction of the movement input
             transform.localPosition += speed * Time.deltaTime * (Vector3)movementInput;
+        }
+
+        // Check if the movement input is up
         if (movementInput == Vector2.up)
         {
+            // Rotate the player to face up
             transform.rotation = Quaternion.Euler(0, 0, 90);
-            transform.localScale = new(Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
 
+            // Flip the player horizontally
+            transform.localScale = new(Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
         }
+        // Check if the movement input is down
         else if (movementInput == Vector2.down)
         {
+            // Rotate the player to face down
             transform.rotation = Quaternion.Euler(0, 0, -90);
-            transform.localScale = new(Mathf.Abs(transform.localScale.x), -Mathf.Abs(transform.localScale.y), transform.localScale.z);
 
+            // Flip the player vertically
+            transform.localScale = new(Mathf.Abs(transform.localScale.x), -Mathf.Abs(transform.localScale.y), transform.localScale.z);
         }
+        // Check if the movement input is left
         else if (movementInput == Vector2.left)
         {
+            // Rotate the player to face left
             transform.rotation = Quaternion.Euler(0, 0, 0);
-            transform.localScale = new(-Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
 
+            // Flip the player horizontally
+            transform.localScale = new(-Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
         }
+        // Check if the movement input is right
         else if (movementInput == Vector2.right)
         {
+            // Rotate the player to face right
             transform.rotation = Quaternion.Euler(0, 0, 0);
+
+            // Flip the player horizontally
             transform.localScale = new(Mathf.Abs(transform.localScale.x), Mathf.Abs(transform.localScale.y), transform.localScale.z);
         }
     }
