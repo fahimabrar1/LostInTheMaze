@@ -100,7 +100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5019453810201862834
 Transform:
   m_ObjectHideFlags: 0
@@ -215,6 +215,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   neighbours: []
-  OpenCell: {fileID: 2405111385574191682}
-  ClosedCell: {fileID: 7418766290351145909}
-  isClosedCell: 0
+  OpenCell: {fileID: 3948607212386226233}
+  ClosedCell: {fileID: 6690702410749673537}
+  model:
+    XPosition: 0
+    YPosition: 0
+    CellSize: 0
+    GCost: 0
+    HCost: 0
+    FCost: 0
+    isWalkable: 0

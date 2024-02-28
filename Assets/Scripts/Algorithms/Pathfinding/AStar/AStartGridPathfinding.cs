@@ -25,7 +25,7 @@ public class AStartGridPathfinding
 
     public AStartGridPathfinding(int rows, int column, int cellSize)
     {
-        grid = new(rows, column, cellSize, (x, y) => new NodeDataModel(x, y));
+        grid = new(rows, column, cellSize, (x, y) => InitializeNodeData(x, y, cellSize));
     }
 
 
@@ -34,13 +34,35 @@ public class AStartGridPathfinding
     {
         grid = new(width, height, 10, (x, y) => new NodeDataModel(x, y));
 
-        // for (int x = 0; x < grid.gridArray.GetLength(0); x++)
-        // {
-        //     for (int y = 0; y < grid.gridArray.GetLength(1); y++)
-        //     {
-        //         Debug.Log($"X: {grid.gridArray[x, y].XPosition}, Y: {grid.gridArray[x, y].YPosition}, ");
-        //     }
-        // }
+    }
+
+
+    /// <summary>
+    /// Initialzies the row/col number with the walkable balue
+    /// </summary>
+    /// <param name="x">The x row on the grid</param>
+    /// <param name="y">The y col on the grid</param>
+    /// <returns>The node Data</returns>
+    private NodeDataModel InitializeNodeData(int x, int y, int cellSize)
+    {
+        return new NodeDataModel(x, y, cellSize, RandomWalkProbability());
+    }
+
+
+    /// <summary>
+    /// Sets the probaility of the random ness, keeping mostly walkable
+    /// </summary>
+    /// <returns>isWalkable or not</returns>
+    private bool RandomWalkProbability()
+    {
+        // Adjust the probability as needed
+        const double probabilityOfWalking = 0.7; // 70% probability of walking (true)
+
+        // Generate a random number between 0 and 1
+        float randomNumber = UnityEngine.Random.Range(0f, 1f);
+
+        // Return true if the random number is less than the probability of walking
+        return randomNumber < probabilityOfWalking;
     }
 
 
@@ -88,8 +110,24 @@ public class AStartGridPathfinding
             List<NodeDataModel> neighbours = Get4DirectionalNeighbours(currentNode);
             foreach (NodeDataModel neighbour in neighbours)
             {
-                // Ignore neighbour if in close list
-                if (closedList.Contains(neighbour) || neighbour == null) continue;
+                if (neighbour == null) continue;
+
+                if (!neighbour.isWalkable)
+                {
+                    // Ignore neighbour if in close list
+                    if (!closedList.Contains(neighbour))
+                    {
+                        closedList.Add(neighbour);
+                    }
+                    continue;
+                }
+                else if (closedList.Contains(neighbour))
+                {
+                    continue;
+                }
+
+
+
                 Debug.Log($"Neighbour {neighbour}");
                 int gCost = currentNode.GCost + CalculateEuclideanlDistanceHeuristicCost(currentNode, neighbour);
                 if (gCost < neighbour.GCost)

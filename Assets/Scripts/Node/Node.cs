@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,15 +7,21 @@ public class Node : MonoBehaviour
     public List<Node> neighbours;
 
 
-    public SpriteRenderer OpenCell;
-    public SpriteRenderer ClosedCell;
-    public bool isClosedCell;
+    public GameObject OpenCell;
+    public GameObject ClosedCell;
 
     public NodeDataModel model;
 
 
     #region Init Methods
-
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        model = new();
+    }
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -110,5 +117,38 @@ public class Node : MonoBehaviour
     {
         return model;
     }
+
+
+
+
+
+    internal void Initialize()
+    {
+        if (!model.isWalkable)
+        {
+            ClosedCell.SetActive(true);
+            OpenCell.SetActive(false);
+        }
+        else
+        {
+            ClosedCell.SetActive(false);
+            OpenCell.SetActive(true);
+        }
+
+        //Settings the sprite to the cell size
+        var nodeSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+        float scaleX = model.CellSize / nodeSpriteRenderer.bounds.size.x;
+        float scaleY = model.CellSize / nodeSpriteRenderer.bounds.size.y;
+        transform.GetChild(0).localScale = new Vector3(scaleX, scaleY, 0);
+
+        var nodeSpriteRenderer2 = transform.GetChild(1).GetComponent<SpriteRenderer>();
+        scaleX = model.CellSize / nodeSpriteRenderer2.bounds.size.x;
+        scaleY = model.CellSize / nodeSpriteRenderer2.bounds.size.y;
+        transform.GetChild(1).localScale = new Vector3(scaleX, scaleY, 0);
+
+    }
+
+
+
     #endregion Basic Methods
 }

@@ -51,15 +51,12 @@ public class PathfindingTesting : MonoBehaviour
             for (int y = 0; y < columns; y++)
             {
                 var obj = Instantiate(nodePrefab, cellSize * new Vector2(x, y), Quaternion.identity, transform);
-                //Settings the sprite to the cell size
-                var nodeSpriteRenderer = nodePrefab.transform.GetChild(0).GetComponent<SpriteRenderer>();
-                float scaleX = cellSize / nodeSpriteRenderer.bounds.size.x;
-                float scaleY = cellSize / nodeSpriteRenderer.bounds.size.y;
-                obj.transform.localScale = new Vector3(scaleX, scaleY, 0);
 
                 // Setting the Node data
                 Node node = obj.GetComponent<Node>();
+
                 node.model = gridPathfinding.grid.gridArray[x, y];
+                node.Initialize();
             }
         }
     }

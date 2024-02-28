@@ -2,6 +2,7 @@ using System;
 using JetBrains.Annotations;
 using UnityEngine;
 
+[Serializable]
 public class NodeDataModel
 {
     [Tooltip("X-coordinate of the node.")]
@@ -9,6 +10,9 @@ public class NodeDataModel
 
     [Tooltip("Y-coordinate of the node.")]
     public int YPosition;
+
+    [Tooltip("CellSize of the of the node.")]
+    public int CellSize;
 
     [Tooltip("Walking Distance from Start node")]
     public int GCost;
@@ -23,6 +27,9 @@ public class NodeDataModel
     [Tooltip("The Previous Node, uses it to trace back to find the final path")]
     public NodeDataModel previousNode;
 
+    [Header("Game Varaibles")]
+    public bool isWalkable;
+
 
     public NodeDataModel() { }
 
@@ -31,6 +38,14 @@ public class NodeDataModel
     {
         this.XPosition = XPosition;
         this.YPosition = YPosition;
+    }
+
+    public NodeDataModel(int XPosition, int YPosition, int cellSize, bool isWalkable)
+    {
+        this.XPosition = XPosition;
+        this.YPosition = YPosition;
+        this.CellSize = cellSize;
+        this.isWalkable = isWalkable;
     }
 
     /// <summary>
