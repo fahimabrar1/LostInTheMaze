@@ -111,9 +111,3 @@ public class BasicNode : MonoBehaviour
 }
 
 
-[Serializable]
-public class NodeData
-{
-    public BasicNode node;
-    public NodeDirectionEnum nodeDirection;
-}

@@ -304,6 +304,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d85b347082b32fd44917c0c9479e59ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellSize: 10
+  columns: 10
+  rows: 10
+  nodePrefab: {fileID: 8479426263029995651, guid: c82ece5aafb9bc349b0250a1ab6cde72, type: 3}
 --- !u!1 &2142660824
 GameObject:
   m_ObjectHideFlags: 0

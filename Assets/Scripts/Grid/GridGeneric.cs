@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class GridGeneric<TGridObj>
 {
-    public int width;
-    public int height;
+    public int rows;
+    public int columns;
     public int celLSize;
     public TGridObj[,] gridArray;
 
-    public GridGeneric(int width, int height, int celLSize, Func<int, int, TGridObj> setGridObject)
+    public GridGeneric(int rows, int column, int celLSize, Func<int, int, TGridObj> setGridObject)
     {
-        this.width = width;
-        this.height = height;
+        this.rows = rows;
+        this.columns = column;
         this.celLSize = celLSize;
 
-        gridArray = new TGridObj[width, height];
+        gridArray = new TGridObj[rows, column];
 
         for (int x = 0; x < gridArray.GetLength(0); x++)
         {
@@ -116,7 +116,7 @@ public class GridGeneric<TGridObj>
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    private bool ValidateCoordinate(int x, int y) => x >= 0 && y >= 0 && x < width && y < height;
+    private bool ValidateCoordinate(int x, int y) => x >= 0 && y >= 0 && x < rows && y < columns;
 
     #endregion
 
@@ -146,12 +146,12 @@ public class GridGeneric<TGridObj>
 
     internal int GetWidth()
     {
-        return width;
+        return rows;
     }
 
     internal int Getheight()
     {
-        return height;
+        return columns;
     }
     #endregion
 

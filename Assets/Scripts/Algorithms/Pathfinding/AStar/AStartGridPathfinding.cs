@@ -13,20 +13,26 @@ public class AStartGridPathfinding
 
 
     [Tooltip("Nodes queued up for searching")]
-    public List<Node> openList;
+    public List<NodeDataModel> openList;
 
     [Tooltip("Nodes that have alreadty been searched")]
-    public List<Node> closedList;
+    public List<NodeDataModel> closedList;
 
     /// <summary>
     /// The Grid system
     /// </summary>
-    public GridGeneric<Node> grid;
+    public GridGeneric<NodeDataModel> grid;
+
+    public AStartGridPathfinding(int rows, int column, int cellSize)
+    {
+        grid = new(rows, column, cellSize, (x, y) => new NodeDataModel(x, y));
+    }
+
+
 
     public AStartGridPathfinding(int width, int height)
     {
-        grid = new(width, height, 10, (x, y) => new Node(x, y));
-
+        grid = new(width, height, 10, (x, y) => new NodeDataModel(x, y));
 
         // for (int x = 0; x < grid.gridArray.GetLength(0); x++)
         // {
@@ -46,17 +52,17 @@ public class AStartGridPathfinding
     /// <param name="endX">The end x point of the node</param>
     /// <param name="endY">The end y point of the node</param>
     /// <returns></returns>
-    public List<Node> FindPath(int startX, int startY, int endX, int endY)
+    public List<NodeDataModel> FindPath(int startX, int startY, int endX, int endY)
     {
         closedList = new();
-        Node startNode = grid.GetValue(startX, startY);
-        Node endNode = grid.GetValue(endX, endY);
+        NodeDataModel startNode = grid.GetValue(startX, startY);
+        NodeDataModel endNode = grid.GetValue(endX, endY);
         openList = new() { startNode };
         for (int x = 0; x < grid.gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < grid.gridArray.GetLength(1); y++)
             {
-                Node node = grid.GetValue(x, y);
+                NodeDataModel node = grid.GetValue(x, y);
                 node.GCost = int.MaxValue;
                 node.CalculateFCost();
                 node.previousNode = null;
@@ -69,7 +75,7 @@ public class AStartGridPathfinding
 
         while (openList.Count > 0)
         {
-            Node currentNode = GetLowestFCostNode(openList);
+            NodeDataModel currentNode = GetLowestFCostNode(openList);
 
             if (currentNode == endNode)
             {
@@ -79,8 +85,8 @@ public class AStartGridPathfinding
 
             openList.Remove(currentNode);
             closedList.Add(currentNode);
-            List<Node> neighbours = Get4DirectionalNeighbours(currentNode);
-            foreach (Node neighbour in neighbours)
+            List<NodeDataModel> neighbours = Get4DirectionalNeighbours(currentNode);
+            foreach (NodeDataModel neighbour in neighbours)
             {
                 // Ignore neighbour if in close list
                 if (closedList.Contains(neighbour) || neighbour == null) continue;
@@ -111,9 +117,9 @@ public class AStartGridPathfinding
     /// </summary>
     /// <param name="currentNode">The inital from of thich the surrounding  nodes will be gotten</param>
     /// <returns>The 8 neighbour or successor</returns>
-    private List<Node> Get8DirectionalNeighbours(Node currentNode)
+    private List<NodeDataModel> Get8DirectionalNeighbours(NodeDataModel currentNode)
     {
-        List<Node> neighboursList = new();
+        List<NodeDataModel> neighboursList = new();
         if (currentNode.XPosition - 1 >= 0)
         {
             // Left Node
@@ -151,9 +157,9 @@ public class AStartGridPathfinding
     /// </summary>
     /// <param name="currentNode">The inital from of thich the surrounding  nodes will be gotten</param>
     /// <returns>The 8 neighbour or successor</returns>
-    private List<Node> Get4DirectionalNeighbours(Node currentNode)
+    private List<NodeDataModel> Get4DirectionalNeighbours(NodeDataModel currentNode)
     {
-        List<Node> neighboursList = new();
+        List<NodeDataModel> neighboursList = new();
         // Left Node
         if (currentNode.XPosition - 1 >= 0)
             neighboursList.Add(GetNode(currentNode.XPosition - 1, currentNode.YPosition));
@@ -181,14 +187,14 @@ public class AStartGridPathfinding
     /// </summary>
     /// <param name="endNode">the final destination node</param>
     /// <returns>the path node list</returns>
-    private List<Node> CalculatePath(Node endNode)
+    private List<NodeDataModel> CalculatePath(NodeDataModel endNode)
     {
-        List<Node> path = new()
+        List<NodeDataModel> path = new()
         {
             endNode
         };
 
-        Node currentNode = endNode;
+        NodeDataModel currentNode = endNode;
 
         while (currentNode != null)
         {
@@ -206,7 +212,7 @@ public class AStartGridPathfinding
     /// <param name="x">X-Value in the grid</param>
     /// <param name="y">Y-Value in the grid</param>
     /// <returns></returns>
-    public Node GetNode(int x, int y)
+    public NodeDataModel GetNode(int x, int y)
     {
         return grid.GetValue(x, y);
     }
@@ -221,7 +227,7 @@ public class AStartGridPathfinding
     /// <param name="current"></param>
     /// <param name="goal"></param>
     /// <returns></returns>
-    private int Calculate1ManhattanDistanceHeuristicCost(Node current, Node goal)
+    private int Calculate1ManhattanDistanceHeuristicCost(NodeDataModel current, NodeDataModel goal)
     {
         return Mathf.RoundToInt(Mathf.Abs(current.XPosition - goal.XPosition) + Mathf.Abs(current.YPosition - goal.YPosition));
     }
@@ -236,7 +242,7 @@ public class AStartGridPathfinding
     /// <param name="current"></param>
     /// <param name="goal"></param>
     /// <returns></returns>
-    private int CalculateEuclideanlDistanceHeuristicCost(Node current, Node goal)
+    private int CalculateEuclideanlDistanceHeuristicCost(NodeDataModel current, NodeDataModel goal)
     {
         Debug.Log($"Node Current EDHC: {current}");
         Debug.Log($"Node Goal EDHC: {goal}");
@@ -253,7 +259,7 @@ public class AStartGridPathfinding
     /// <param name="current"></param>
     /// <param name="goal"></param>
     /// <returns></returns>
-    private int CalculateDiagonalDistanceHeuristicCost(Node current, Node goal)
+    private int CalculateDiagonalDistanceHeuristicCost(NodeDataModel current, NodeDataModel goal)
     {
         int xDistance = Mathf.Abs(current.XPosition - goal.XPosition);
         int yDistance = Mathf.Abs(current.YPosition - goal.YPosition);
@@ -268,9 +274,9 @@ public class AStartGridPathfinding
     /// </summary>
     /// <param name="pathNodes">list of nodes in the open list</param>
     /// <returns></returns>
-    private Node GetLowestFCostNode(List<Node> pathNodes)
+    private NodeDataModel GetLowestFCostNode(List<NodeDataModel> pathNodes)
     {
-        Node node = pathNodes.OrderBy(n => n.FCost).FirstOrDefault();
+        NodeDataModel node = pathNodes.OrderBy(n => n.FCost).FirstOrDefault();
         return node;
     }
 
