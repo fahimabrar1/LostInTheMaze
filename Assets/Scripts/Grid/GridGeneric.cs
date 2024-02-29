@@ -98,8 +98,8 @@ public class GridGeneric<TGridObj>
     /// <param name="y">Y-Value in the grid</param>
     public void GetXY(Vector3 worldPos, out int x, out int y)
     {
-        x = Mathf.FloorToInt(worldPos.x / cellSize);
-        y = Mathf.FloorToInt(worldPos.y / cellSize);
+        x = Mathf.RoundToInt(worldPos.x / cellSize);
+        y = Mathf.RoundToInt(worldPos.y / cellSize);
     }
 
 

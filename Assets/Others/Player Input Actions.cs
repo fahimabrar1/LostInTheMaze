@@ -38,9 +38,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""MouseMovement"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""8d419fcf-aa29-44f5-a6b3-4d8b1ad287d2"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -160,7 +160,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0ae594c2-0214-4e23-9741-da515b942345"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

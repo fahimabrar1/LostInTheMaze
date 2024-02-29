@@ -63,15 +63,7 @@ public class Player_V2 : MonoBehaviour
     private NodeDirectionEnum playerMovingDirection;
 
     #region  Mono Methods
-    /// <summary>
-    /// Start is called on the frame when a script is enabled just before
-    /// any of the Update methods is called the first time.
-    /// </summary>
-    void Start()
-    {
-        pathQueue = new();
 
-    }
 
     /// <summary>
     /// This function is called when the object becomes enabled and active.
@@ -82,6 +74,7 @@ public class Player_V2 : MonoBehaviour
         PlayerInput.InputActions.Player.MouseMovement.started += OnLeftClickInputStarted;
     }
 
+
     /// <summary>
     /// This function is called when the behaviour becomes disabled or inactive.
     /// </summary>
@@ -91,6 +84,17 @@ public class Player_V2 : MonoBehaviour
         PlayerInput.InputActions.Player.MouseMovement.started -= OnLeftClickInputStarted;
     }
 
+
+
+
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        pathQueue = new();
+    }
 
 
 
@@ -276,28 +280,38 @@ public class Player_V2 : MonoBehaviour
     /// <param name="context"></param>
     private void OnPressInputStarted(InputAction.CallbackContext context)
     {
-        // Read the input value as a Vector2
-        newMovementInput = context.ReadValue<Vector2>();
-        Debug.Log($"Input: {newMovementInput}");
-        // pathQueue.Clear();
+        if (context.started)
+        {
+            // Read the input value as a Vector2
+            newMovementInput = context.ReadValue<Vector2>();
+            Debug.Log($"Input: {newMovementInput}");
+            // pathQueue.Clear();
 
-        // Check if the game has started or if the new input direction is opposite to the current input direction
-        if (!gameStart || IsOppositeDirection(newMovementInput, movementInput))
-            CheckForNextNode();
+            // Check if the game has started or if the new input direction is opposite to the current input direction
+            if (!gameStart || IsOppositeDirection(newMovementInput, movementInput))
+                CheckForNextNode();
 
-        // If the game hasn't started yet, set the gameStart flag to true
-        if (!gameStart) gameStart = true;
+            // If the game hasn't started yet, set the gameStart flag to true
+            if (!gameStart) gameStart = true;
+        }
     }
 
     private void OnLeftClickInputStarted(InputAction.CallbackContext context)
     {
-        var input = context.ReadValue<Vector2>();
-        pathQueue = new();
-        pathQueue = GameManager.instance.pathfindingTesting.GetDestinationNodes(transform.position, UtilsClass.GetMouseWorldPositionWithZ(input));
-        // If the game hasn't started yet, set the gameStart flag to true
-        if (!gameStart) gameStart = true;
+        if (context.started)
+        {
+            var input = Mouse.current.position.ReadValue();
+            var worldInput = UtilsClass.GetMouseWorldPositionWithZ(input);
+            Debug.LogWarning($"Mouse input: {input}");
+            Debug.LogWarning($"Mouse input: {worldInput}");
+            pathQueue = new();
+            pathQueue = GameManager.instance.pathfindingTesting.GetDestinationNodes(transform.position, worldInput);
+            // If the game hasn't started yet, set the gameStart flag to true
+            if (!gameStart) gameStart = true;
 
-        CheckForNextNode();
+            CheckForNextNode();
+        }
+
     }
 
 
