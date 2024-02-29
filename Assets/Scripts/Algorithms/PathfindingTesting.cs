@@ -147,13 +147,14 @@ public class PathfindingTesting : MonoBehaviour
         var pathList = gridPathfinding.FindPath(start - (Vector3)offset, target - (Vector3)offset);
 
         // Create a new list of NodeContainer objects to store the destination nodes.
-        List<NodeContainer> nodeQueue = new();
+        List<NodeContainer> newList = new();
         Debug.Log("Path List Count :" + pathList.Count);
         // Iterate through each node in the pathList.
         foreach (var nodeModel in pathList)
         {
+            Debug.Log($"node: {nodeModel.Row}, {nodeModel.Column} ");
             // Find the corresponding Node object in the nodes list.
-            var node = nodes.Find((n) => n.model == nodeModel);
+            var node = nodes.Find((n) => n.model.Column == nodeModel.Column && n.model.Row == nodeModel.Row);
 
             // If the node is not found, skip to the next node in the pathList.
             if (node == null) continue;
@@ -162,23 +163,24 @@ public class PathfindingTesting : MonoBehaviour
             try
             {
                 int index = pathList.IndexOf(nodeModel);
-                var nextNode = nodes.Find((n) => n.model == pathList[index + 1]);
+                var nextNode = nodes.Find((n) => n.model.Column == pathList[index + 1].Column && n.model.Row == pathList[index + 1].Row);
                 NodeContainer container = new(node, node.GetDirectionToNeighbour(nextNode.transform.position));
-                nodeQueue.Add(container);
+                newList.Add(container);
             }
             // If an exception occurs, create a NodeContainer object with the current node and a default direction of up.
             catch (Exception)
             {
                 NodeContainer container = new(node, NodeDirectionEnum.up);
-                nodeQueue.Add(container);
+                newList.Add(container);
             }
         }
 
         // Draw the path lines between the nodes.
         DrawPathLines(pathList);
+        Debug.Log($"Path: {newList.Count}");
 
         // Return the list of NodeContainer objects representing the destination nodes along the path.
-        return nodeQueue;
+        return newList;
     }
 
 

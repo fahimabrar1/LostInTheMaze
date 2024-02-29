@@ -267,9 +267,9 @@ public class AStartGridPathfinding
     {
         // Initialize a new list of NodeDataModel objects to store the path
         List<NodeDataModel> path = new()
-    {
-        endNode
-    };
+        {
+            endNode
+        };
 
         // Initialize a variable to store the current node
         NodeDataModel currentNode = endNode;

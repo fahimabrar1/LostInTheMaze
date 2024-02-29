@@ -54,7 +54,7 @@ public class Player_V2 : MonoBehaviour
     /// <summary>
     /// Stores the input user pressed before reaching junction
     /// </summary>
-    public List<NodeContainer> pathQueue;
+    public List<NodeContainer> pathList;
 
 
     /// <summary>
@@ -93,7 +93,7 @@ public class Player_V2 : MonoBehaviour
     /// </summary>
     void Start()
     {
-        pathQueue = new();
+        pathList = new();
     }
 
 
@@ -143,10 +143,10 @@ public class Player_V2 : MonoBehaviour
         // Update the current node to the next node in the path.
         CurrentNode = moveToNode;
 
-        if (pathQueue.Count != 0)
+        if (pathList.Count != 0)
         {
-            NodeContainer container = pathQueue[0];
-            pathQueue.RemoveAt(0);
+            NodeContainer container = pathList[0];
+            pathList.RemoveAt(0);
             // if (container.node == moveToNode)
             // {
             //     CheckForNextNode();
@@ -304,8 +304,9 @@ public class Player_V2 : MonoBehaviour
             // {
             var input = Mouse.current.position.ReadValue();
             var worldInput = UtilsClass.GetMouseWorldPositionWithZ(input);
-            pathQueue = new();
-            pathQueue = GameManager.instance.GetDestinationNodes(transform.position, worldInput);
+            pathList = new();
+            pathList = GameManager.instance.GetDestinationNodes(transform.position, worldInput);
+            Debug.Log($"Path: {pathList.Count}");
             // If the game hasn't started yet, set the gameStart flag to true
             if (!gameStart) gameStart = true;
 
