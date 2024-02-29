@@ -141,14 +141,14 @@ public class PathfindingTesting : MonoBehaviour
     /// <param name="start">The starting position.</param>
     /// <param name="target">The target position.</param>
     /// <returns>A list of NodeContainer objects representing the destination nodes along the path.</returns>
-    public virtual List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
+    public List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
     {
         // Find the path between the start and target positions using the gridPathfinding object.
         var pathList = gridPathfinding.FindPath(start - (Vector3)offset, target - (Vector3)offset);
 
         // Create a new list of NodeContainer objects to store the destination nodes.
         List<NodeContainer> nodeQueue = new();
-
+        Debug.Log("Path List Count :" + pathList.Count);
         // Iterate through each node in the pathList.
         foreach (var nodeModel in pathList)
         {
@@ -191,13 +191,13 @@ public class PathfindingTesting : MonoBehaviour
             try
             {
                 // Log the x and y coordinates of the current cell
-                Debug.Log($"Path X: {path[i].XPosition}, Path Y: {path[i].YPosition}");
+                Debug.Log($"Path X: {path[i].Column}, Path Y: {path[i].Row}");
 
                 // Log the x and y coordinates of the previous cell
-                Debug.Log($"Path Prev X: {path[i].previousNode.XPosition}, Path Prev  Y: {path[i].previousNode.YPosition}");
+                Debug.Log($"Path Prev X: {path[i].previousNode.Column}, Path Prev  Y: {path[i].previousNode.Row}");
 
                 // Draw a line between the current cell and the previous cell
-                Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].XPosition, path[i].YPosition), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.XPosition, path[i].previousNode.YPosition), Color.green, 1);
+                Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].Column, path[i].Row), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.Column, path[i].previousNode.Row), Color.green, 1);
             }
             catch (Exception)
             {

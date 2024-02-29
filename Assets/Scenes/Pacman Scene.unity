@@ -2489,9 +2489,6 @@ MonoBehaviour:
   - {fileID: 870505718}
   - {fileID: 1057978259}
   offset: {x: -1.12, y: -1.82}
-  Rows: 21
-  Cols: 15
-  CellSize: 0.16
   nodeToCalculateOffset: {fileID: 1872986858}
 --- !u!4 &959485435
 Transform:

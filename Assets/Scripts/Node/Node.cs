@@ -16,11 +16,19 @@ public class Node : MonoBehaviour
     public GameObject ClosedCell;
 
     [Tooltip("Create an instance of the NodeDataModel class to store data related to the game's nodes")]
-    public NodeDataModel model = new();
+    public NodeDataModel model;
 
 
     #region Init Methods
 
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
+        model = new();
+    }
 
     #endregion Init Methods
 

@@ -8,10 +8,10 @@ public class NodeDataModel
     [Header("A* data")]
 
     [Tooltip("X-coordinate of the node.")]
-    public int XPosition;
+    public int Column;
 
     [Tooltip("Y-coordinate of the node.")]
-    public int YPosition;
+    public int Row;
 
     [Tooltip("CellSize of the of the node.")]
     public float CellSize;
@@ -39,14 +39,14 @@ public class NodeDataModel
 
     public NodeDataModel(int XPosition, int YPosition)
     {
-        this.XPosition = XPosition;
-        this.YPosition = YPosition;
+        this.Column = XPosition;
+        this.Row = YPosition;
     }
 
     public NodeDataModel(int XPosition, int YPosition, float cellSize, bool isWalkable)
     {
-        this.XPosition = XPosition;
-        this.YPosition = YPosition;
+        this.Column = XPosition;
+        this.Row = YPosition;
         this.CellSize = cellSize;
         this.isWalkable = isWalkable;
     }

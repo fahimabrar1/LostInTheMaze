@@ -94,10 +94,17 @@ public class AStartGridPathfinding
         // Initialize closed list
         closedList = new();
 
-        // Get start and end nodes
+        Debug.Log($"Start Coordinate:  X: {startX}, Y: {startY}");
+        Debug.Log($"End Coordinate:  X: {endX}, Y: {endY}");
+        Debug.Log($"End Coordinate:  X: {grid.gridArray[endX, endY]}");
+
+
         NodeDataModel startNode = grid.GetValue(startX, startY);
         NodeDataModel endNode = grid.GetValue(endX, endY);
 
+
+        Debug.Log($"Start Node: {startNode}, Column: {startNode.Column}, Row: {startNode.Row}");
+        Debug.Log($"End Node: {endNode}, Column: {endNode.Column}, Row: {endNode.Row}");
         // Initialize open list with start node
         openList = new() { startNode };
 
@@ -107,6 +114,7 @@ public class AStartGridPathfinding
             for (int y = 0; y < grid.gridArray.GetLength(1); y++)
             {
                 NodeDataModel node = grid.GetValue(x, y);
+                // Debug.Log($"THE NODE: {node}, X: {x}, Y: {y}");
                 node.GCost = int.MaxValue;
                 node.CalculateFCost();
                 node.previousNode = null;
@@ -174,6 +182,8 @@ public class AStartGridPathfinding
             }
         }
 
+        Debug.LogWarning("No Path Found");
+
         return null;
     }
 
@@ -186,31 +196,31 @@ public class AStartGridPathfinding
     private List<NodeDataModel> Get8DirectionalNeighbours(NodeDataModel currentNode)
     {
         List<NodeDataModel> neighboursList = new();
-        if (currentNode.XPosition - 1 >= 0)
+        if (currentNode.Column - 1 >= 0)
         {
             // Left Node
-            neighboursList.Add(GetNode(currentNode.XPosition - 1, currentNode.YPosition));
+            neighboursList.Add(GetNode(currentNode.Column - 1, currentNode.Row));
             // Left Down
-            if (currentNode.YPosition - 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition - 1, currentNode.YPosition - 1));
+            if (currentNode.Row - 1 >= 0) neighboursList.Add(GetNode(currentNode.Column - 1, currentNode.Row - 1));
             // Left Up
-            if (currentNode.YPosition + 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition - 1, currentNode.YPosition + 1));
+            if (currentNode.Row + 1 >= 0) neighboursList.Add(GetNode(currentNode.Column - 1, currentNode.Row + 1));
         }
 
-        if (currentNode.XPosition + 1 < grid.GetWidth())
+        if (currentNode.Column + 1 < grid.GetWidth())
         {
             // Right Node
-            neighboursList.Add(GetNode(currentNode.XPosition + 1, currentNode.YPosition));
+            neighboursList.Add(GetNode(currentNode.Column + 1, currentNode.Row));
             // Right Down
-            if (currentNode.YPosition - 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition + 1, currentNode.YPosition - 1));
+            if (currentNode.Row - 1 >= 0) neighboursList.Add(GetNode(currentNode.Column + 1, currentNode.Row - 1));
             // Right Up
-            if (currentNode.YPosition + 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition + 1, currentNode.YPosition + 1));
+            if (currentNode.Row + 1 >= 0) neighboursList.Add(GetNode(currentNode.Column + 1, currentNode.Row + 1));
         }
 
         // Up
-        if (currentNode.YPosition + 1 < grid.Getheight()) neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition + 1));
+        if (currentNode.Row + 1 < grid.Getheight()) neighboursList.Add(GetNode(currentNode.Column, currentNode.Row + 1));
 
         // Down
-        if (currentNode.YPosition - 1 >= 0) neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition - 1));
+        if (currentNode.Row - 1 >= 0) neighboursList.Add(GetNode(currentNode.Column, currentNode.Row - 1));
 
 
         Debug.Log($"Found: {neighboursList.Count} Nodes");
@@ -227,23 +237,23 @@ public class AStartGridPathfinding
     {
         List<NodeDataModel> neighboursList = new();
         // Left Node
-        if (currentNode.XPosition - 1 >= 0)
-            neighboursList.Add(GetNode(currentNode.XPosition - 1, currentNode.YPosition));
+        if (currentNode.Column - 1 >= 0)
+            neighboursList.Add(GetNode(currentNode.Column - 1, currentNode.Row));
 
 
         // Right Node
-        if (currentNode.XPosition + 1 < grid.GetWidth())
-            neighboursList.Add(GetNode(currentNode.XPosition + 1, currentNode.YPosition));
+        if (currentNode.Column + 1 < grid.GetWidth())
+            neighboursList.Add(GetNode(currentNode.Column + 1, currentNode.Row));
 
         // Up Node
-        if (currentNode.YPosition + 1 < grid.Getheight()) neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition + 1));
+        if (currentNode.Row + 1 < grid.Getheight()) neighboursList.Add(GetNode(currentNode.Column, currentNode.Row + 1));
 
         // Down Node
-        if (currentNode.YPosition - 1 >= 0)
-            neighboursList.Add(GetNode(currentNode.XPosition, currentNode.YPosition - 1));
+        if (currentNode.Row - 1 >= 0)
+            neighboursList.Add(GetNode(currentNode.Column, currentNode.Row - 1));
 
 
-        Debug.Log($"Found: {neighboursList.Count} Nodes");
+        // Debug.Log($"Found: {neighboursList.Count} Nodes");
         return neighboursList;
     }
 
@@ -276,7 +286,7 @@ public class AStartGridPathfinding
 
         // Reverse the path list to get the path from starting node to end node
         path.Reverse();
-
+        Debug.Log($"Path Length: {path.Count}");
         // Return the calculated path
         return path;
     }
@@ -305,7 +315,7 @@ public class AStartGridPathfinding
     /// <returns></returns>
     private int Calculate1ManhattanDistanceHeuristicCost(NodeDataModel current, NodeDataModel goal)
     {
-        return Mathf.RoundToInt(Mathf.Abs(current.XPosition - goal.XPosition) + Mathf.Abs(current.YPosition - goal.YPosition));
+        return Mathf.RoundToInt(Mathf.Abs(current.Column - goal.Column) + Mathf.Abs(current.Row - goal.Row));
     }
 
 
@@ -320,9 +330,9 @@ public class AStartGridPathfinding
     /// <returns></returns>
     private int CalculateEuclideanlDistanceHeuristicCost(NodeDataModel current, NodeDataModel goal)
     {
-        Debug.Log($"Node Current EDHC: {current}");
-        Debug.Log($"Node Goal EDHC: {goal}");
-        return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(current.XPosition - goal.XPosition, 2) + Mathf.Pow(current.YPosition - goal.YPosition, 2)));
+        // Debug.Log($"Node Current EDHC: {current}");
+        // Debug.Log($"Node Goal EDHC: {goal}");
+        return Mathf.RoundToInt(Mathf.Sqrt(Mathf.Pow(current.Column - goal.Column, 2) + Mathf.Pow(current.Row - goal.Row, 2)));
     }
 
 
@@ -337,8 +347,8 @@ public class AStartGridPathfinding
     /// <returns></returns>
     private int CalculateDiagonalDistanceHeuristicCost(NodeDataModel current, NodeDataModel goal)
     {
-        int xDistance = Mathf.Abs(current.XPosition - goal.XPosition);
-        int yDistance = Mathf.Abs(current.YPosition - goal.YPosition);
+        int xDistance = Mathf.Abs(current.Column - goal.Column);
+        int yDistance = Mathf.Abs(current.Row - goal.Row);
 
         return MOVE_STRAIGHT_COST * (xDistance + yDistance) + (MOVE_DIAGONAL_COST - 2 * MOVE_STRAIGHT_COST) * Mathf.Min(xDistance, yDistance);
     }

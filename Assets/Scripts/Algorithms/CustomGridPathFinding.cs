@@ -16,33 +16,42 @@ public class CustomGridPathFinding : PathfindingTesting
     public override void Start()
     {
 
-
         cellSize = (nodes[0].transform.position.y - nodeToCalculateOffset.transform.position.y) / (rows - 1);
         gridPathfinding = new(rows, columns, cellSize);
         offset = nodeToCalculateOffset.transform.position;
         foreach (var node in nodes)
         {
-            var model = node.model;
             // Calculate row value
-            int col = Mathf.Abs(Mathf.FloorToInt((node.transform.position.x - offset.x) / cellSize));
-            int row = Mathf.Abs(Mathf.FloorToInt((node.transform.position.y - offset.y) / cellSize));
-            model.XPosition = row;
-            model.YPosition = col;
-            model.CellSize = cellSize;
+            int Col = Mathf.RoundToInt(Mathf.Abs((node.transform.position.x - offset.x) / cellSize));
+            int Row = Mathf.RoundToInt(Mathf.Abs((node.transform.position.y - offset.y) / cellSize));
+            NodeDataModel model = new()
+            {
+                Column = Col,
+                Row = Row,
+                CellSize = cellSize,
+                isWalkable = node.model.isWalkable,
+            };
             node.model = model;
 
-            Debug.Log($"X {row}, Y: {col}");
-            gridPathfinding.grid.gridArray[row, col] = node.model;
+            Debug.Log($"Row: {Row}, Col: {Col}, model Col/Row: {model.Column}/{model.Row}");
+            gridPathfinding.grid.SetValue(Row, Col, model);
 
             node.Get4Neighbours();
         }
+
+        // foreach (var item in gridPathfinding.grid.gridArray)
+        // {
+        //     Debug.Log($"{item}");
+        // }
+
+        Debug.Log(gridPathfinding.grid.gridArray[14, 0]);
     }
 
 
 
-    public override List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
-    {
-        return base.GetDestinationNodes(start, target);
-    }
+    // public override List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
+    // {
+    //     return base.GetDestinationNodes(start, target);
+    // }
 
 }
