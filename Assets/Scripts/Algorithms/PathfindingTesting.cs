@@ -80,7 +80,7 @@ public class PathfindingTesting : MonoBehaviour
                 node.model = gridPathfinding.grid.gridArray[x, y];
 
                 // Initialize the node
-                node.Initialize();
+                node.InitializeWithSprites();
             }
         }
 

@@ -30,7 +30,7 @@ public class Node : MonoBehaviour
     /// <summary>
     /// Calls to get neighbour on it's 4 direction
     /// </summary>
-    public void Get4Neighbours()
+    public virtual void Get4Neighbours()
     {
         if (!model.isWalkable) return;
         //If the collider of the object hit is not NUll
@@ -39,12 +39,6 @@ public class Node : MonoBehaviour
         AddNeighbour(Vector2.left);
         AddNeighbour(Vector2.right);
     }
-
-    private void JunctionCheck()
-    {
-        throw new NotImplementedException();
-    }
-
 
 
     /// <summary>
@@ -149,10 +143,7 @@ public class Node : MonoBehaviour
     }
 
 
-
-
-
-    internal void Initialize()
+    public virtual void InitializeWithSprites()
     {
         if (!model.isWalkable)
         {

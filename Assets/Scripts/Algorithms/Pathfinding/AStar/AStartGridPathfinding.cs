@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class AStartGridPathfinding
@@ -23,9 +22,12 @@ public class AStartGridPathfinding
     /// </summary>
     public GridGeneric<NodeDataModel> grid;
 
-    public AStartGridPathfinding(int rows, int column, int cellSize)
+    public AStartGridPathfinding(int rows, int column, float cellSize, bool autoInitialize = false)
     {
-        grid = new(rows, column, cellSize, (x, y) => InitializeNodeData(x, y, cellSize));
+        if (autoInitialize)
+            grid = new(rows, column, cellSize, (x, y) => InitializeNodeData(x, y, cellSize));
+        else
+            grid = new(rows, column, cellSize);
     }
 
 
@@ -36,7 +38,7 @@ public class AStartGridPathfinding
     /// <param name="x">The x row on the grid</param>
     /// <param name="y">The y col on the grid</param>
     /// <returns>The node Data</returns>
-    private NodeDataModel InitializeNodeData(int x, int y, int cellSize)
+    private NodeDataModel InitializeNodeData(int x, int y, float cellSize)
     {
         return new NodeDataModel(x, y, cellSize, (x == 0 && y == 0) || RandomWalkProbability());
     }

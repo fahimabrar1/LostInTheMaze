@@ -22,9 +22,8 @@ public class PacNode : Node
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Get4Neighbours()
     {
-
+        base.Get4Neighbours();
     }
 }

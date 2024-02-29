@@ -14,7 +14,7 @@ public class NodeDataModel
     public int YPosition;
 
     [Tooltip("CellSize of the of the node.")]
-    public int CellSize;
+    public float CellSize;
 
     [Tooltip("Walking Distance from Start node")]
     public int GCost;
@@ -43,7 +43,7 @@ public class NodeDataModel
         this.YPosition = YPosition;
     }
 
-    public NodeDataModel(int XPosition, int YPosition, int cellSize, bool isWalkable)
+    public NodeDataModel(int XPosition, int YPosition, float cellSize, bool isWalkable)
     {
         this.XPosition = XPosition;
         this.YPosition = YPosition;

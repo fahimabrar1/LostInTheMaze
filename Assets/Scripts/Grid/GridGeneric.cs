@@ -11,7 +11,7 @@ public class GridGeneric<TGridObj>
     public int columns;
 
     // Define the size of each cell in the grid
-    public int cellSize;
+    public float cellSize;
 
     // Define a 2D array to store the grid objects
     // The array is of type TGridObj[,] and represents a 2D grid
@@ -28,7 +28,7 @@ public class GridGeneric<TGridObj>
     /// <param name="columns">The number of columns in the grid.</param>
     /// <param name="celLSize">The size of each cell in the grid.</param>
     /// <param name="setGridObject">A function that sets the value of each cell in the grid based on its row and column indices.</param>
-    public GridGeneric(int rows, int columns, int celLSize, Func<int, int, TGridObj> setGridObject)
+    public GridGeneric(int rows, int columns, float celLSize, Func<int, int, TGridObj> setGridObject)
     {
         // Store the number of rows, columns, and cell size in private fields.
         this.rows = rows;
@@ -47,6 +47,18 @@ public class GridGeneric<TGridObj>
                 gridArray[x, y] = setGridObject(x, y);
             }
         }
+    }
+
+    public GridGeneric(int rows, int columns, float celLSize)
+    {
+        // Store the number of rows, columns, and cell size in private fields.
+        this.rows = rows;
+        this.columns = columns;
+        this.cellSize = celLSize;
+        Debug.Log($"Rows: {rows}, Columns: {columns}");
+        // Create a new 2D array to store the grid objects.
+        gridArray = new TGridObj[rows, columns];
+
     }
 
 
