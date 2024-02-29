@@ -229,7 +229,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -376,7 +376,7 @@ MonoBehaviour:
   columns: 12
   rows: 12
   nodeGap: 0
-  nodePrefab: {fileID: 8479426263029995651, guid: 88c31b5b0a9545a4886b04e01b732c0c, type: 3}
+  nodePrefab: {fileID: 8479426263029995651, guid: c2c9802aa14e2dd46afac62154167bd2, type: 3}
 --- !u!4 &1891170436
 Transform:
   m_ObjectHideFlags: 0
