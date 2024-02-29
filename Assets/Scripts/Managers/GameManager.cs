@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject Player;
 
-    public PacNode spawnPosition;
+    public Node spawnPosition;
     public PathfindingTesting pathfindingTesting;
 
 
@@ -68,7 +68,10 @@ public class GameManager : MonoBehaviour
         if (spawnPosition != null)
             player = Instantiate(Player, spawnPosition.transform.position, Quaternion.identity).GetComponent<Player_V2>();
         else
+        {
             player = Instantiate(Player).GetComponent<Player_V2>();
+            spawnPosition = pathfindingTesting.nodes[0];
+        }
 
         // Set the player's current node to the starting node.
         player.CurrentNode = spawnPosition;

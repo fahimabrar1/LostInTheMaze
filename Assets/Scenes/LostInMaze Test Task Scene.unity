@@ -304,7 +304,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d97ff699f0ec9143ace15d731b6921d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 1502420591635105988, guid: 59f24c8f270d1c3459902a826e8d8924, type: 3}
+  Player: {fileID: 1502420591635105988, guid: c582892afec24a64398e24ba28736ccc, type: 3}
+  spawnPosition: {fileID: 0}
   pathfindingTesting: {fileID: 1686067060}
 --- !u!1 &1686067057
 GameObject:
@@ -355,6 +356,7 @@ MonoBehaviour:
   rows: 10
   nodePrefab: {fileID: 8479426263029995651, guid: c82ece5aafb9bc349b0250a1ab6cde72, type: 3}
   nodes: []
+  offset: {x: 0, y: 0}
 --- !u!1 &2142660824
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ public class PathfindingTesting : MonoBehaviour
     public virtual void Start()
     {
         nodes = new();
-        gridPathfinding = new(rows, columns, cellSize);
+        gridPathfinding = new(rows, columns, cellSize, autoInitialize: true);
         GenerateGrid();
         InvokeRepeating("DrawGridGizmos", 0.0f, 0.1f);
     }
