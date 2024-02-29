@@ -26,14 +26,14 @@ public class GridGeneric<TGridObj>
     /// </summary>
     /// <param name="rows">The number of rows in the grid.</param>
     /// <param name="columns">The number of columns in the grid.</param>
-    /// <param name="celLSize">The size of each cell in the grid.</param>
+    /// <param name="cellSize">The size of each cell in the grid.</param>
     /// <param name="setGridObject">A function that sets the value of each cell in the grid based on its row and column indices.</param>
-    public GridGeneric(int rows, int columns, float celLSize, Func<int, int, TGridObj> setGridObject)
+    public GridGeneric(int rows, int columns, float cellSize, Func<int, int, TGridObj> setGridObject)
     {
         // Store the number of rows, columns, and cell size in private fields.
         this.rows = rows;
         this.columns = columns;
-        this.cellSize = celLSize;
+        this.cellSize = cellSize;
 
         // Create a new 2D array to store the grid objects.
         gridArray = new TGridObj[rows, columns];
@@ -110,8 +110,10 @@ public class GridGeneric<TGridObj>
     /// <param name="y">Y-Value in the grid</param>
     public void GetXY(Vector3 worldPos, out int x, out int y)
     {
+
         x = Mathf.RoundToInt(worldPos.x / cellSize);
         y = Mathf.RoundToInt(worldPos.y / cellSize);
+        Debug.Log($"End Coordinate: {worldPos}, cellSize: {cellSize}, X1: {x}, Y1: {y},");
     }
 
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,6 @@ public class GameManager : MonoBehaviour
 
     public PacNode spawnPosition;
     public PathfindingTesting pathfindingTesting;
-    public CustomGridPathFinding customGridPathFinding;
 
 
     /// <summary>
@@ -31,19 +31,10 @@ public class GameManager : MonoBehaviour
 
         Application.targetFrameRate = 60;
 
-        try
-        {
-            pathfindingTesting = FindAnyObjectByType<PathfindingTesting>();
-        }
-        catch (System.Exception)
-        { }
 
-        try
-        {
-            customGridPathFinding = FindAnyObjectByType<CustomGridPathFinding>();
-        }
-        catch (System.Exception)
-        { }
+        pathfindingTesting = FindAnyObjectByType<PathfindingTesting>();
+
+
 
 
     }
@@ -86,8 +77,8 @@ public class GameManager : MonoBehaviour
         player.moveToNode = spawnPosition;
     }
 
-
-
-
-
+    internal List<NodeContainer> GetDestinationNodes(Vector3 position, Vector3 worldInput)
+    {
+        return pathfindingTesting.GetDestinationNodes(position, worldInput);
+    }
 }
