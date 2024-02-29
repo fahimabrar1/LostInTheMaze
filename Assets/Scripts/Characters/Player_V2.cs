@@ -300,16 +300,24 @@ public class Player_V2 : MonoBehaviour
     {
         if (context.started)
         {
-            var input = Mouse.current.position.ReadValue();
-            var worldInput = UtilsClass.GetMouseWorldPositionWithZ(input);
-            // Debug.LogWarning($"Mouse input: {input}");
-            // Debug.LogWarning($"Mouse input: {worldInput}");
-            pathQueue = new();
-            pathQueue = GameManager.instance.pathfindingTesting.GetDestinationNodes(transform.position, worldInput);
-            // If the game hasn't started yet, set the gameStart flag to true
-            if (!gameStart) gameStart = true;
+            try
+            {
+                var input = Mouse.current.position.ReadValue();
+                var worldInput = UtilsClass.GetMouseWorldPositionWithZ(input);
+                // Debug.LogWarning($"Mouse input: {input}");
+                // Debug.LogWarning($"Mouse input: {worldInput}");
+                pathQueue = new();
+                pathQueue = GameManager.instance.pathfindingTesting.GetDestinationNodes(transform.position, worldInput);
+                // If the game hasn't started yet, set the gameStart flag to true
+                if (!gameStart) gameStart = true;
 
-            CheckForNextNode();
+                CheckForNextNode();
+            }
+            catch (Exception)
+            {
+                Debug.LogWarning("Failed to click");
+            }
+
         }
 
     }
