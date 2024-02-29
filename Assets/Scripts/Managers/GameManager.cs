@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour
     public static GameManager instance { get; private set; }
 
     public GameObject Player;
+
+    public PacNode spawnPosition;
     public PathfindingTesting pathfindingTesting;
+    public CustomGridPathFinding customGridPathFinding;
 
 
     /// <summary>
@@ -27,7 +30,22 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this);
 
         Application.targetFrameRate = 60;
-        pathfindingTesting = FindAnyObjectByType<PathfindingTesting>();
+
+        try
+        {
+            pathfindingTesting = FindAnyObjectByType<PathfindingTesting>();
+        }
+        catch (System.Exception)
+        { }
+
+        try
+        {
+            customGridPathFinding = FindAnyObjectByType<CustomGridPathFinding>();
+        }
+        catch (System.Exception)
+        { }
+
+
     }
 
 
@@ -55,16 +73,17 @@ public class GameManager : MonoBehaviour
         await Task.Delay(3000);
 
         // Instantiate the player from the 'Player' prefab and get its 'Player_V2' component.
-        var Obj = Instantiate(Player).GetComponent<Player_V2>();
-
-        // Find the starting node (0, 0) in the pathfindingTesting nodes list.
-        var a = pathfindingTesting.nodes.Find((node) => node.model.XPosition == 0 && node.model.YPosition == 0);
+        Player_V2 player;
+        if (spawnPosition != null)
+            player = Instantiate(Player, spawnPosition.transform.position, Quaternion.identity).GetComponent<Player_V2>();
+        else
+            player = Instantiate(Player).GetComponent<Player_V2>();
 
         // Set the player's current node to the starting node.
-        Obj.CurrentNode = a;
+        player.CurrentNode = spawnPosition;
 
         // Set the player's target node to the starting node.
-        Obj.moveToNode = a;
+        player.moveToNode = spawnPosition;
     }
 
 

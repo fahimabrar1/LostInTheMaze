@@ -8,6 +8,9 @@ public class CustomGridPathFinding : MonoBehaviour
     public int Rows = 21;
     public int Cols = 15;
     public float CellSize = 0.16f;
+
+    public PacNode nodeToCalculateOffset;
+
     public Vector2 offset;
 
     public List<Node> nodes;
@@ -19,14 +22,14 @@ public class CustomGridPathFinding : MonoBehaviour
     void Start()
     {
         aStartGrid = new(Rows, Cols, 0.16f);
-
+        CellSize = (nodes[0].transform.position.y - nodeToCalculateOffset.transform.position.y) / (Rows - 1);
+        offset = nodeToCalculateOffset.transform.position;
         foreach (var node in nodes)
         {
-
             var model = node.model;
             // Calculate row value
-            int col = Mathf.Abs(Mathf.RoundToInt((node.transform.position.x - offset.x) / CellSize));
-            int row = Mathf.Abs(Mathf.RoundToInt((node.transform.position.y - offset.y) / CellSize));
+            int col = Mathf.Abs(Mathf.FloorToInt((node.transform.position.x - offset.x) / CellSize));
+            int row = Mathf.Abs(Mathf.FloorToInt((node.transform.position.y - offset.y) / CellSize));
             model.XPosition = row;
             model.YPosition = col;
             model.CellSize = CellSize;
