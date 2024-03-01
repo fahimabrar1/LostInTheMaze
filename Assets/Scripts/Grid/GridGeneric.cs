@@ -28,7 +28,7 @@ public class GridGeneric<TGridObj>
     /// <param name="columns">The number of columns in the grid.</param>
     /// <param name="cellSize">The size of each cell in the grid.</param>
     /// <param name="setGridObject">A function that sets the value of each cell in the grid based on its row and column indices.</param>
-    public GridGeneric(int rows, int columns, float cellSize, Func<int, int, TGridObj> setGridObject)
+    public GridGeneric(int columns, int rows, float cellSize, Func<int, int, TGridObj> setGridObject)
     {
         // Store the number of rows, columns, and cell size in private fields.
         this.rows = rows;
@@ -36,7 +36,8 @@ public class GridGeneric<TGridObj>
         this.cellSize = cellSize;
 
         // Create a new 2D array to store the grid objects.
-        gridArray = new TGridObj[rows, columns];
+        gridArray = new TGridObj[columns, rows];
+        Debug.Log($"Rows: {rows}, Columns: {columns}");
 
         // Iterate through each row and column in the grid.
         for (int x = 0; x < gridArray.GetLength(0); x++)
@@ -49,7 +50,7 @@ public class GridGeneric<TGridObj>
         }
     }
 
-    public GridGeneric(int rows, int columns, float celLSize)
+    public GridGeneric(int columns, int rows, float celLSize)
     {
         // Store the number of rows, columns, and cell size in private fields.
         this.rows = rows;
@@ -57,7 +58,7 @@ public class GridGeneric<TGridObj>
         this.cellSize = celLSize;
         Debug.Log($"Rows: {rows}, Columns: {columns}");
         // Create a new 2D array to store the grid objects.
-        gridArray = new TGridObj[rows, columns];
+        gridArray = new TGridObj[columns, rows];
 
     }
 
@@ -154,7 +155,7 @@ public class GridGeneric<TGridObj>
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    private bool ValidateCoordinate(int x, int y) => x >= 0 && y >= 0 && x < rows && y < columns;
+    private bool ValidateCoordinate(int x, int y) => x >= 0 && y >= 0 && x < columns && y < rows;
 
     #endregion
 

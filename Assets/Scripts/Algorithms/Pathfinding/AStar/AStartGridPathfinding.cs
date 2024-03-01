@@ -22,12 +22,12 @@ public class AStartGridPathfinding
     /// </summary>
     public GridGeneric<NodeDataModel> grid;
 
-    public AStartGridPathfinding(int rows, int column, float cellSize, bool autoInitialize = false)
+    public AStartGridPathfinding(int column, int rows, float cellSize, bool autoInitialize = false)
     {
         if (autoInitialize)
-            grid = new(rows, column, cellSize, (x, y) => InitializeNodeData(x, y, cellSize));
+            grid = new(column, rows, cellSize, (x, y) => InitializeNodeData(x, y, cellSize));
         else
-            grid = new(rows, column, cellSize);
+            grid = new(column, rows, cellSize);
     }
 
 
@@ -108,13 +108,14 @@ public class AStartGridPathfinding
         // Initialize open list with start node
         openList = new() { startNode };
 
+        Debug.Log($"Col Length: {grid.gridArray.GetLength(0)}, Row Length: {grid.gridArray.GetLength(1)}");
         // Set default GCost, HCost, and previousNode for all nodes
         for (int x = 0; x < grid.gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < grid.gridArray.GetLength(1); y++)
             {
                 NodeDataModel node = grid.GetValue(x, y);
-                // Debug.Log($"THE NODE: {node}, X: {x}, Y: {y}");
+                Debug.Log($"THE NODE: {node}, X: {x}, Y: {y}");
                 node.GCost = int.MaxValue;
                 node.CalculateFCost();
                 node.previousNode = null;

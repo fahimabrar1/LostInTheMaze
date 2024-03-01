@@ -38,7 +38,7 @@ public class PathfindingTesting : MonoBehaviour
     public virtual void Start()
     {
         nodes = new();
-        gridPathfinding = new(rows, columns, cellSize, autoInitialize: true);
+        gridPathfinding = new(columns, rows, cellSize, true);
         GenerateGrid();
         InvokeRepeating("DrawGridGizmos", 0.0f, 0.1f);
     }
@@ -53,10 +53,10 @@ public class PathfindingTesting : MonoBehaviour
         Debug.Log(gridPathfinding.grid.gridArray.Length);
 
         // Loop through each row in the grid
-        for (int x = 0; x < rows; x++)
+        for (int x = 0; x < columns; x++)
         {
             // Loop through each column in the current row
-            for (int y = 0; y < columns; y++)
+            for (int y = 0; y < rows; y++)
             {
                 // Instantiate the node prefab at the current cell position
                 var obj = Instantiate(nodePrefab, cellSize * new Vector2(x, y), Quaternion.identity, transform);

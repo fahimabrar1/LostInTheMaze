@@ -353,7 +353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellSize: 10
   columns: 10
-  rows: 10
+  rows: 8
   nodePrefab: {fileID: 8479426263029995651, guid: c82ece5aafb9bc349b0250a1ab6cde72, type: 3}
   nodes: []
   offset: {x: 0, y: 0}
