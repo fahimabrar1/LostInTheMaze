@@ -113,7 +113,7 @@ public class GridGeneric<TGridObj>
 
         x = Mathf.RoundToInt(worldPos.x / cellSize);
         y = Mathf.RoundToInt(worldPos.y / cellSize);
-        Debug.Log($"End Coordinate: {worldPos}, cellSize: {cellSize}, X1: {x}, Y1: {y},");
+        // Debug.Log($"End Coordinate: {worldPos}, cellSize: {cellSize}, X1: {x}, Y1: {y},");
     }
 
 

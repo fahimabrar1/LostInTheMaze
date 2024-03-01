@@ -94,17 +94,17 @@ public class AStartGridPathfinding
         // Initialize closed list
         closedList = new();
 
-        Debug.Log($"Start Coordinate:  X: {startX}, Y: {startY}");
-        Debug.Log($"End Coordinate:  X: {endX}, Y: {endY}");
-        Debug.Log($"End Coordinate:  X: {grid.gridArray[endX, endY]}");
+        // Debug.Log($"Start Coordinate:  X: {startX}, Y: {startY}");
+        // Debug.Log($"End Coordinate:  X: {endX}, Y: {endY}");
+        // Debug.Log($"End Coordinate:  X: {grid.gridArray[endX, endY]}");
 
 
         NodeDataModel startNode = grid.GetValue(startX, startY);
         NodeDataModel endNode = grid.GetValue(endX, endY);
 
 
-        Debug.Log($"Start Node: {startNode}, Column: {startNode.Column}, Row: {startNode.Row}");
-        Debug.Log($"End Node: {endNode}, Column: {endNode.Column}, Row: {endNode.Row}");
+        // Debug.Log($"Start Node: {startNode}, Column: {startNode.Column}, Row: {startNode.Row}");
+        // Debug.Log($"End Node: {endNode}, Column: {endNode.Column}, Row: {endNode.Row}");
         // Initialize open list with start node
         openList = new() { startNode };
 

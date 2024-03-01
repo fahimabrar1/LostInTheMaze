@@ -147,23 +147,25 @@ public class Player_V2 : MonoBehaviour
         {
             NodeContainer container = pathList[0];
             pathList.RemoveAt(0);
-            // if (container.node == moveToNode)
-            // {
-            //     CheckForNextNode();
-            //     return;
-            // }
-            Debug.Log($"Found Node Current: {CurrentNode}");
-            Debug.Log($"Found Node Current: {container.node} {CurrentNode.GetDirectionVectorOfNodeDirection(CurrentNode.GetDirectionToNeighbour(container.node.transform.position))}");
-            Debug.Log($"Found Node Current: {container.node} {container.nodeDirection}");
+            if (container.node == moveToNode)
+            {
+                CheckForNextNode();
+                return;
+            }
+            // Debug.Log($"Found Node Current: {CurrentNode}");
+            // Debug.Log($"Found Node Current: {container.node} {CurrentNode.GetDirectionVectorOfNodeDirection(CurrentNode.GetDirectionToNeighbour(container.node.transform.position))}");
+            // Debug.Log($"Found Node Current: {container.node} {container.nodeDirection}");
 
             movementInput = CurrentNode.GetDirectionVectorOfNodeDirection(CurrentNode.GetDirectionToNeighbour(container.node.transform.position));
             moveToNode = container.node;
             return;
         }
 
+
+
         // Find the next node in the path based on the player's moving direction.
         data = CurrentNode.neighbours.FirstOrDefault(node => node.nodeDirection == playerMovingDirection);
-
+        Debug.Log("Found Next Node");
         // If a next node is found, update the movement input and move to the next node.
         if (data != null)
         {
@@ -306,11 +308,20 @@ public class Player_V2 : MonoBehaviour
             var worldInput = UtilsClass.GetMouseWorldPositionWithZ(input);
             pathList = new();
             pathList = GameManager.instance.GetDestinationNodes(transform.position, worldInput);
+
+
             Debug.Log($"Path: {pathList.Count}");
-            // If the game hasn't started yet, set the gameStart flag to true
+            for (int i = 0; i < pathList.Count; i++)
+            {
+                Debug.Log($"Path Node, Column: {pathList[i].node.model.Column}, Row: {pathList[i].node.model.Row}");
+            }
+
             if (!gameStart) gameStart = true;
 
-            CheckForNextNode();
+            if (gameObject)
+                CheckForNextNode();
+            // If the game hasn't started yet, set the gameStart flag to true
+
             // }
             // catch (Exception)
             // {

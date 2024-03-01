@@ -145,6 +145,8 @@ public class PathfindingTesting : MonoBehaviour
     {
         // Find the path between the start and target positions using the gridPathfinding object.
         var pathList = gridPathfinding.FindPath(start - (Vector3)offset, target - (Vector3)offset);
+        // Draw the path lines between the nodes.
+        DrawPathLines(pathList);
 
         // Create a new list of NodeContainer objects to store the destination nodes.
         List<NodeContainer> newList = new();
@@ -152,7 +154,8 @@ public class PathfindingTesting : MonoBehaviour
         // Iterate through each node in the pathList.
         foreach (var nodeModel in pathList)
         {
-            Debug.Log($"node: {nodeModel.Row}, {nodeModel.Column} ");
+            if (nodeModel == null) continue;
+            // Debug.Log($"node: {nodeModel.Row}, {nodeModel.Column} ");
             // Find the corresponding Node object in the nodes list.
             var node = nodes.Find((n) => n.model.Column == nodeModel.Column && n.model.Row == nodeModel.Row);
 
@@ -175,10 +178,6 @@ public class PathfindingTesting : MonoBehaviour
             }
         }
 
-        // Draw the path lines between the nodes.
-        DrawPathLines(pathList);
-        Debug.Log($"Path: {newList.Count}");
-
         // Return the list of NodeContainer objects representing the destination nodes along the path.
         return newList;
     }
@@ -193,10 +192,10 @@ public class PathfindingTesting : MonoBehaviour
             try
             {
                 // Log the x and y coordinates of the current cell
-                Debug.Log($"Path X: {path[i].Column}, Path Y: {path[i].Row}");
+                // Debug.Log($"Path X: {path[i].Column}, Path Y: {path[i].Row}");
 
                 // Log the x and y coordinates of the previous cell
-                Debug.Log($"Path Prev X: {path[i].previousNode.Column}, Path Prev  Y: {path[i].previousNode.Row}");
+                // Debug.Log($"Path Prev X: {path[i].previousNode.Column}, Path Prev  Y: {path[i].previousNode.Row}");
 
                 // Draw a line between the current cell and the previous cell
                 Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].Column, path[i].Row), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.Column, path[i].previousNode.Row), Color.green, 1);
