@@ -185,12 +185,12 @@ public class GridGeneric<TGridObj>
 
     internal int GetWidth()
     {
-        return rows;
+        return columns;
     }
 
     internal int Getheight()
     {
-        return columns;
+        return rows;
     }
     #endregion
 

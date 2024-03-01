@@ -18,7 +18,7 @@ public class CustomGridPathFinding : PathfindingTesting
     {
 
         cellSize = (nodes[0].transform.position.y - nodeToCalculateOffset.transform.position.y) / (rows - 1);
-        gridPathfinding = new(rows, columns, cellSize);
+        gridPathfinding = new(columns, rows, cellSize);
         offset = nodeToCalculateOffset.transform.position;
         foreach (var node in nodes)
         {
@@ -35,24 +35,10 @@ public class CustomGridPathFinding : PathfindingTesting
             node.model = model;
 
             Debug.Log($"Row: {Row}, Col: {Col}, model Col/Row: {model.Column}/{model.Row}");
-            gridPathfinding.grid.SetValue(Row, Col, model);
+            gridPathfinding.grid.SetValue(Col, Row, model);
 
             node.Get4Neighbours();
         }
-
-        // foreach (var item in gridPathfinding.grid.gridArray)
-        // {
-        //     Debug.Log($"{item}");
-        // }
-
-        Debug.Log(gridPathfinding.grid.gridArray[14, 0]);
     }
-
-
-
-    // public override List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
-    // {
-    //     return base.GetDestinationNodes(start, target);
-    // }
 
 }

@@ -187,23 +187,24 @@ public class PathfindingTesting : MonoBehaviour
 
     public void DrawPathLines(List<NodeDataModel> path)
     {
-        for (int i = path.Count - 1; i > 0; i--)
-        {
-            try
+        if (path != null)
+            for (int i = path.Count - 1; i > 0; i--)
             {
-                // Log the x and y coordinates of the current cell
-                // Debug.Log($"Path X: {path[i].Column}, Path Y: {path[i].Row}");
+                try
+                {
+                    // Log the x and y coordinates of the current cell
+                    // Debug.Log($"Path X: {path[i].Column}, Path Y: {path[i].Row}");
 
-                // Log the x and y coordinates of the previous cell
-                // Debug.Log($"Path Prev X: {path[i].previousNode.Column}, Path Prev  Y: {path[i].previousNode.Row}");
+                    // Log the x and y coordinates of the previous cell
+                    // Debug.Log($"Path Prev X: {path[i].previousNode.Column}, Path Prev  Y: {path[i].previousNode.Row}");
 
-                // Draw a line between the current cell and the previous cell
-                Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].Column, path[i].Row), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.Column, path[i].previousNode.Row), Color.green, 1);
+                    // Draw a line between the current cell and the previous cell
+                    Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].Column, path[i].Row) + (Vector3)offset, gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.Column, path[i].previousNode.Row) + (Vector3)offset, Color.green, 1);
+                }
+                catch (Exception)
+                {
+                    // If an exception occurs, ignore it
+                }
             }
-            catch (Exception)
-            {
-                // If an exception occurs, ignore it
-            }
-        }
     }
 }
