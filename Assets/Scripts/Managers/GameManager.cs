@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         player.moveToNode = spawnPosition;
     }
 
-    internal List<NodeContainer> GetDestinationNodes(Vector3 position, Vector3 worldInput)
+    public List<NodeContainer> GetDestinationNodes(Vector3 position, Vector3 worldInput)
     {
         return pathfindingTesting.GetDestinationNodes(position, worldInput);
     }
