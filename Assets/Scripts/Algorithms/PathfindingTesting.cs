@@ -38,7 +38,7 @@ public class PathfindingTesting : MonoBehaviour
     public virtual void Start()
     {
         nodes = new();
-        gridPathfinding = new(rows, columns, cellSize, autoInitialize: true);
+        gridPathfinding = new(rows, columns, cellSize, true);
         GenerateGrid();
         InvokeRepeating("DrawGridGizmos", 0.0f, 0.1f);
     }
@@ -65,16 +65,22 @@ public class PathfindingTesting : MonoBehaviour
                 obj.name = $"Node {x} {y}";
 
                 // Get the Node component from the instantiated object
-                Node node = obj.GetComponent<Node>();
+                if (obj.TryGetComponent(out Node node))
+                {
 
-                // Add the node to the nodes list
-                nodes.Add(node);
+                    var n = gridPathfinding.grid.GetValue(x, y);
+                    // Set the model of the node to the corresponding element in the grid array
+                    if (x == 0 && y == 1) Debug.Log($"Row {n.Row}, Column {n.Column}");
+                    node.model = n;
 
-                // Set the model of the node to the corresponding element in the grid array
-                node.model = gridPathfinding.grid.gridArray[x, y];
+                    Debug.Log($"Setting Node, Row {node.model.Row}, Column {node.model.Column}");
 
-                // Initialize the node
-                node.InitializeWithSprites();
+                    // Initialize the node
+                    node.InitializeWithSprites();
+                    // Add the node to the nodes list
+                    nodes.Add(node);
+                }
+
             }
         }
 
@@ -143,18 +149,28 @@ public class PathfindingTesting : MonoBehaviour
     /// <returns>A list of NodeContainer objects representing the destination nodes along the path.</returns>
     public List<NodeContainer> GetDestinationNodes(Vector3 start, Vector3 target)
     {
+
         // Find the path between the start and target positions using the gridPathfinding object.
         var pathList = gridPathfinding.FindPath(start - (Vector3)offset, target - (Vector3)offset);
 
+        // Draws Path
+        DrawPathLines(pathList);
+
         // Create a new list of NodeContainer objects to store the destination nodes.
-        List<NodeContainer> nodeQueue = new();
-        Debug.Log("Path List Count :" + pathList.Count);
+        List<NodeContainer> newList = new();
+
         // Iterate through each node in the pathList.
         foreach (var nodeModel in pathList)
         {
+            if (nodeModel == null) continue;
+
+            // Debug.Log($"Real Node Data: Column: {nodeModel.Column}, Row: {nodeModel.Row}");
+            // Debug.Log($"Available Node Data: Column: {nodes[1].model.Column}, Row: {nodes[1].model.Row}");
+
             // Find the corresponding Node object in the nodes list.
             var node = nodes.Find((n) => n.model == nodeModel);
 
+            Debug.Log($"Found Node Data: Column: {node.model.Column}, Row: {node.model.Row}");
             // If the node is not found, skip to the next node in the pathList.
             if (node == null) continue;
 
@@ -164,21 +180,21 @@ public class PathfindingTesting : MonoBehaviour
                 int index = pathList.IndexOf(nodeModel);
                 var nextNode = nodes.Find((n) => n.model == pathList[index + 1]);
                 NodeContainer container = new(node, node.GetDirectionToNeighbour(nextNode.transform.position));
-                nodeQueue.Add(container);
+                newList.Add(container);
             }
             // If an exception occurs, create a NodeContainer object with the current node and a default direction of up.
             catch (Exception)
             {
                 NodeContainer container = new(node, NodeDirectionEnum.up);
-                nodeQueue.Add(container);
+                newList.Add(container);
             }
         }
 
         // Draw the path lines between the nodes.
-        DrawPathLines(pathList);
+        Debug.Log($"Path: {newList.Count}");
 
         // Return the list of NodeContainer objects representing the destination nodes along the path.
-        return nodeQueue;
+        return newList;
     }
 
 
@@ -186,21 +202,23 @@ public class PathfindingTesting : MonoBehaviour
 
     public void DrawPathLines(List<NodeDataModel> path)
     {
+
         for (int i = path.Count - 1; i > 0; i--)
         {
             try
             {
                 // Log the x and y coordinates of the current cell
-                Debug.Log($"Path X: {path[i].Column}, Path Y: {path[i].Row}");
+                Debug.Log($"Path Column: {path[i].Column}, Path Row: {path[i].Row}");
 
                 // Log the x and y coordinates of the previous cell
-                Debug.Log($"Path Prev X: {path[i].previousNode.Column}, Path Prev  Y: {path[i].previousNode.Row}");
+                Debug.Log($"Path Prev Column: {path[i].previousNode.Column}, Path Prev Row: {path[i].previousNode.Row}");
 
                 // Draw a line between the current cell and the previous cell
                 Debug.DrawLine(gridPathfinding.grid.GetWorldCellPosition(path[i].Column, path[i].Row), gridPathfinding.grid.GetWorldCellPosition(path[i].previousNode.Column, path[i].previousNode.Row), Color.green, 1);
             }
             catch (Exception)
             {
+                Debug.LogWarning("Failed to draw gizmo");
                 // If an exception occurs, ignore it
             }
         }
